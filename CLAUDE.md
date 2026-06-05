@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 App React **personale** per consultare un itinerario di viaggio a Lanzarote (giugno 2026). Lingua dei contenuti: italiano. L'app è un single-page React senza routing né backend.
 
-Milestone completate: **M0** (CLAUDE.md), **M1** (scaffolding Vite), **M2** (componente migrato in `src/components/`), **M3** (verifica end-to-end OK: `dev` ready in 407ms, `build` 1.22s con bundle 160KB/51KB gzip; backup originale rimosso dopo verifica visiva). Piano completo: `C:\Users\sergi\.claude\plans\voglio-costuire-un-app-rosy-cloud.md`.
+Milestone di scaffolding completate: **M0–M4** (CLAUDE.md, scaffolding Vite, migrazione in `src/`, verifica end-to-end, README + istruzioni deploy Vercel). Piano archiviato: `C:\Users\sergi\.claude\plans\voglio-costuire-un-app-rosy-cloud.md`. Da qui in poi si entra in fase di evolutive funzionali.
 
 ## Stack
 
@@ -39,7 +39,16 @@ Milestone completate: **M0** (CLAUDE.md), **M1** (scaffolding Vite), **M2** (com
 └── CLAUDE.md
 ```
 
-Deploy target: **Vercel** con auto-detection del preset Vite (no `vercel.json`).
+## Deploy
+
+Target: **Vercel** con auto-detection del preset Vite. Non serve `vercel.json`: Vercel rileva `vite` in `package.json`, usa `npm run build` come build command e `dist` come output directory.
+
+Flusso (vedi `README.md` per dettagli):
+- Importare il repo su [vercel.com/new](https://vercel.com/new) → preset Vite rilevato automaticamente → deploy.
+- Push su `main` → Production Deployment.
+- Push su altri branch (es. `dev`) → Preview Deployment.
+
+Se in futuro l'app dovesse aggiungere un client-side router (React Router, ecc.), aggiungere `vercel.json` con un rewrite SPA: `{ "rewrites": [{ "source": "/(.*)", "destination": "/" }] }`.
 
 ## Comandi
 
