@@ -12,6 +12,7 @@ Dal 18/06 al 25/06
 |  Bari            |17:25 - 18:55             |
 ## Parcheggio o taxi?
 
+
  - Taxi → € 28,00 da Picone ([fonte](https://bari.airports.aeroportidipuglia.it/en/da-e-per-gli-aeroporti/type/taxi/)) totale € 56
  - **Parcheggio Pinguino** → € 40 per 8 giorni di sosta
  
