@@ -6,7 +6,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 App React **personale** per consultare un itinerario di viaggio a Lanzarote (giugno 2026). Lingua dei contenuti: italiano. L'app è un single-page React senza routing né backend.
 
-Al momento (Milestone 0) il repo è **pre-scaffolding**: contiene il solo componente React standalone e gli appunti di viaggio. Lo scaffolding Vite verrà aggiunto nelle milestone successive (vedi `C:\Users\sergi\.claude\plans\voglio-costuire-un-app-rosy-cloud.md`).
+Milestone correnti completate: **M0** (CLAUDE.md), **M1** (scaffolding Vite). Il componente vive ancora in root come `lanzarote-itinerario.jsx` e verrà spostato in `src/components/` in M2. Piano completo: `C:\Users\sergi\.claude\plans\voglio-costuire-un-app-rosy-cloud.md`.
+
+## Stack
+
+- **Vite 5** + **React 18** (JS, no TypeScript)
+- Deploy target: **Vercel** (auto-detection del preset Vite, no `vercel.json`)
+- Nessuna libreria UI esterna: il componente itinerario è self-contained con stili inline
 
 ## File chiave
 
@@ -37,13 +43,12 @@ Struttura finale:
 
 ## Comandi
 
-Pre-scaffolding (Milestone 0): nessun comando disponibile, il progetto non è ancora un app Node.
-
-Post-Milestone 1 saranno disponibili (verranno documentati qui quando creati):
 - `npm install` — installa dipendenze
-- `npm run dev` — dev server su `http://localhost:5173`
+- `npm run dev` — dev server Vite (default `http://localhost:5173`)
 - `npm run build` — build di produzione in `dist/`
-- `npm run preview` — serve la build prodotta
+- `npm run preview` — serve localmente la build di `dist/`
+
+Nota: al momento (fine M1) `src/` non esiste ancora, quindi `npm run dev` fallirebbe (entry `/src/main.jsx` mancante). Verrà reso eseguibile in M2.
 
 ## Convenzioni e vincoli operativi
 
