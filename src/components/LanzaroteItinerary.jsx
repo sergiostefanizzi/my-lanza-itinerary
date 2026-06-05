@@ -9,6 +9,11 @@ const days = [
     day: 1, date: "Gio 18 Giugno", title: "Arrivo", accent: "#c9913d",
     subtitle: "Benvenuti sull'isola del fuoco",
     icon: "✈️",
+    stops: [
+      { label: "Aeroporto di Lanzarote", coords: [28.9455, -13.6052] },
+      { label: "Lungomare di Puerto del Carmen", coords: [28.9215, -13.6720] },
+      { label: "Cena: Mura · Puerto del Carmen", coords: [28.9170, -13.6635] },
+    ],
     items: [
       { type: "logistica", icon: "🛬", text: "17:00 – Atterraggio a Lanzarote" },
       { type: "logistica", icon: "🚗", text: "18:00 – Ritiro auto Cicar 500X" },
@@ -40,6 +45,14 @@ const days = [
     subtitle: "Mercato, grotte e piscine naturali",
     icon: "🌿",
     badge: "⚡ Solo sabato: Mercato di Haría!",
+    stops: [
+      { label: "Jardín de Cactus", coords: [29.0810, -13.4790] },
+      { label: "Mercado Artesanal de Haría", coords: [29.1456, -13.5036] },
+      { label: "Cueva de los Verdes", coords: [29.1564, -13.4380] },
+      { label: "Jameos del Agua", coords: [29.1577, -13.4322] },
+      { label: "Piscine naturali di Punta Mujeres", coords: [29.1490, -13.4490] },
+      { label: "Cena: Kamezi · Costa Teguise", coords: [28.9966, -13.5030] },
+    ],
     items: [
       { type: "attività", icon: "🛒", text: "Mercado Artesanal de Haría", note: "Solo il sabato!" },
       { type: "vista", icon: "🌵", text: "Jardín de Cactus" },
@@ -53,6 +66,13 @@ const days = [
     day: 4, date: "Dom 21 Giugno", title: "La Graciosa", accent: "#e8a86d",
     subtitle: "L'ultimo paradiso vergine d'Europa",
     icon: "🏝️",
+    stops: [
+      { label: "Órzola (imbarco ferry)", coords: [29.2227, -13.4520] },
+      { label: "Caleta de Sebo · La Graciosa", coords: [29.2298, -13.5034] },
+      { label: "Playa de las Conchas", coords: [29.2685, -13.5170] },
+      { label: "Playa Bermeja", coords: [29.2640, -13.5230] },
+      { label: "Cena: Teleclub · Caleta de Sebo", coords: [29.2305, -13.5040] },
+    ],
     items: [
       { type: "attività", icon: "⛵", text: "Tour Jeep Safari – La Graciosa (giornata intera)", note: "€45 / persona" },
       { type: "vista", icon: "🏖️", text: "Playa de las Conchas – sabbia dorata e vulcano Bermeja" },
@@ -64,6 +84,12 @@ const days = [
     day: 5, date: "Lun 22 Giugno", title: "Fuoco e Vino", accent: "#e05252",
     subtitle: "Timanfaya, lava e Malvasía",
     icon: "🔥",
+    stops: [
+      { label: "Casa Museo del Campesino", coords: [29.0010, -13.6420] },
+      { label: "Degustazione: Bodega Vega de Yuco", coords: [28.9870, -13.6800] },
+      { label: "La Geria (vigneti)", coords: [28.9760, -13.7250] },
+      { label: "Parco di Timanfaya · El Diablo", coords: [28.9956, -13.7555] },
+    ],
     items: [
       { type: "attività", icon: "🌋", text: "Tour Parco Nazionale di Timanfaya", note: "€57 / persona" },
       { type: "vista", icon: "🍇", text: "La Geria – i vigneti nei crateri vulcanici" },
@@ -76,6 +102,14 @@ const days = [
     day: 6, date: "Mar 23 Giugno", title: "Manrique e il Centro", accent: "#a07cc5",
     subtitle: "Arte, architettura e panorami senza fine",
     icon: "🎨",
+    stops: [
+      { label: "Las Grietas", coords: [28.9850, -13.7090] },
+      { label: "Fundación César Manrique · Tahíche", coords: [29.0470, -13.5640] },
+      { label: "Lagomar Museo · Nazaret", coords: [29.0530, -13.5560] },
+      { label: "Teguise", coords: [29.0600, -13.5610] },
+      { label: "Caleta de Famara", coords: [29.1150, -13.5640] },
+      { label: "Mirador del Río", coords: [29.2120, -13.4790] },
+    ],
     items: [
       { type: "vista", icon: "🎨", text: "Fundación César Manrique" },
       { type: "vista", icon: "🏛️", text: "Lagomar Museo" },
@@ -89,6 +123,11 @@ const days = [
     day: 7, date: "Mer 24 Giugno", title: "Adrenalina", accent: "#f4a261",
     subtitle: "L'ultima avventura sull'isola",
     icon: "🏎️",
+    stops: [
+      { label: "Buggy Tour · Puerto del Carmen", coords: [28.9230, -13.6800] },
+      { label: "Gran Karting · San Bartolomé", coords: [28.9630, -13.6360] },
+      { label: "Tramonto · Puerto del Carmen", coords: [28.9215, -13.6720] },
+    ],
     items: [
       { type: "attività", icon: "🚙", text: "Buggy Tour – 3 ore", note: "€130 / coppia" },
       { type: "attività", icon: "🏎️", text: "Kart a San Bartolomé (400cc)", note: "€42 / persona" },
@@ -100,6 +139,9 @@ const days = [
     day: 8, date: "Gio 25 Giugno", title: "Partenza", accent: "#7a8b99",
     subtitle: "Arrivederci, Lanzarote",
     icon: "🏠",
+    stops: [
+      { label: "Aeroporto di Lanzarote", coords: [28.9455, -13.6052] },
+    ],
     items: [
       { type: "logistica", icon: "🚗", text: "06:00 – Consegna auto Cicar" },
       { type: "logistica", icon: "✈️", text: "08:30 – Volo Lanzarote → Milano Bergamo" },

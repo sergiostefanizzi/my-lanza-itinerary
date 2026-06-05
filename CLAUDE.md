@@ -10,9 +10,7 @@ Milestone di scaffolding completate: **M0–M4** (CLAUDE.md, scaffolding Vite, m
 
 Evolutive funzionali completate:
 - **Tema scuro/chiaro** — toggle sole/luna fisso in alto a destra. Tema iniziale: `localStorage` → altrimenti `prefers-color-scheme` → fallback scuro. La scelta è persistita in `localStorage` (chiave `theme`).
-
-Evolutive funzionali in corso:
-- **Itinerario visuale su mappa** (tab "Mappa", Leaflet) — **M1 completata**: componente `DayMap` + tab Mappa con selettore giorno, dati mappa solo per il **Giorno 2** (campione di validazione). **M2 da fare**: coordinate per i restanti 7 giorni. Vedi sezione "Mappa".
+- **Itinerario visuale su mappa** (tab "Mappa", Leaflet) — componente `DayMap` + tab Mappa con selettore giorno. Coordinate (`stops`) presenti per **tutti gli 8 giorni**. Vedi sezione "Mappa".
 
 ## Stack
 
@@ -74,7 +72,7 @@ stops: [
 ```
 L'ordine di `stops` definisce il percorso (polyline). I giorni **senza** `stops` mostrano un placeholder ("mappa non ancora disponibile"). La costante `BASE` (alloggio Puerto del Carmen) è il punto di partenza, mostrato come marker 🏠 e inizio della polyline.
 
-**Stato attuale**: solo il **Giorno 2** ha `stops` (campione M1). M2 = aggiungere `stops` ai restanti giorni; il selettore e `DayMap` sono già pronti, basta popolare i dati.
+**Stato attuale**: **tutti gli 8 giorni** hanno `stops`. Il branch placeholder ("mappa non ancora disponibile") resta come fallback di sicurezza per eventuali giorni futuri senza `stops`, ma al momento non viene mai mostrato.
 
 **Tile / tema**: `DayMap` sceglie i tile CARTO `light_all` o `dark_all` in base alla prop `theme`. `MapContainer` ha `key={day-theme}` per rimontare al cambio giorno/tema. I marker sono `L.divIcon` stilizzati via CSS (`.daymap-pin`, `.daymap-home`) — nessuna immagine marker di Leaflet, così si evita il problema dei path icona con i bundler.
 
