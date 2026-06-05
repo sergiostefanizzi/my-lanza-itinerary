@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 App React **personale** per consultare un itinerario di viaggio a Lanzarote (giugno 2026). Lingua dei contenuti: italiano. L'app è un single-page React senza routing né backend.
 
-Milestone correnti completate: **M0** (CLAUDE.md), **M1** (scaffolding Vite). Il componente vive ancora in root come `lanzarote-itinerario.jsx` e verrà spostato in `src/components/` in M2. Piano completo: `C:\Users\sergi\.claude\plans\voglio-costuire-un-app-rosy-cloud.md`.
+Milestone correnti completate: **M0** (CLAUDE.md), **M1** (scaffolding Vite), **M2** (componente migrato in `src/components/`). Il file originale `lanzarote-itinerario.jsx` resta ancora in root come backup fino al completamento della verifica end-to-end in M3. Piano completo: `C:\Users\sergi\.claude\plans\voglio-costuire-un-app-rosy-cloud.md`.
 
 ## Stack
 
@@ -16,30 +16,32 @@ Milestone correnti completate: **M0** (CLAUDE.md), **M1** (scaffolding Vite). Il
 
 ## File chiave
 
-- **`lanzarote-itinerario.jsx`** — componente React unico, ~523 righe, attualmente in root. Self-contained: `useState` per accordion/tab, zero dipendenze UI esterne, stili interamente in un blocco `<style>{...}</style>` inline (no Tailwind, no shadcn/ui, no CSS esterno). Dati hardcoded nelle costanti `days[]`, `budget[]`, `typeColors`, `typeLabels`. Questo file verrà spostato in `src/components/LanzaroteItinerary.jsx` in Milestone 2.
+- **`src/components/LanzaroteItinerary.jsx`** — componente React unico, ~523 righe. Self-contained: `useState` per accordion/tab, zero dipendenze UI esterne, stili interamente in un blocco `<style>{...}</style>` inline (no Tailwind, no shadcn/ui, no CSS esterno). Dati hardcoded nelle costanti `days[]`, `budget[]`, `typeColors`, `typeLabels`.
+- **`src/App.jsx`** — wrapper minimale che renderizza `<LanzaroteItinerary />`. Aggiungere qui eventuali provider/router globali in futuro.
+- **`src/main.jsx`** — entry point: `createRoot` + `<StrictMode>` + import di `./index.css`.
+- **`src/index.css`** — reset minimo (`html, body { margin: 0 }`). Tutto il resto degli stili vive inline nel componente.
+- **`lanzarote-itinerario.jsx`** (root) — **copia originale**, mantenuta come backup fino a fine M3. Da eliminare dopo verifica end-to-end.
 - **`Lanzorote26.md`** — appunti grezzi del viaggio (voli, alloggio, noleggio auto, attrazioni, ristoranti, tour). **Fonte di verità** per le evolutive future dei contenuti. Non viene importato dall'app: serve come reference per quando si aggiorneranno i dati dell'itinerario.
 - **`README.md`** — al momento contiene solo il titolo; verrà completato in Milestone 4 con istruzioni di sviluppo e deploy.
 
-## Architettura prevista (post-scaffolding)
-
-Stack target: **Vite + React (JS, no TypeScript)**, deploy su **Vercel** con auto-detection (no `vercel.json`).
-
-Struttura finale:
+## Struttura
 
 ```
 ├── index.html               # entry HTML in root (convenzione Vite)
 ├── package.json
 ├── vite.config.js
-├── public/                  # asset statici (creata quando servirà)
 ├── src/
-│   ├── main.jsx             # entry: createRoot + StrictMode
-│   ├── App.jsx              # wrapper minimale, renderizza <LanzaroteItinerary />
-│   ├── index.css            # reset minimo; il resto degli stili resta inline
+│   ├── main.jsx
+│   ├── App.jsx
+│   ├── index.css
 │   └── components/
 │       └── LanzaroteItinerary.jsx
-├── Lanzorote26.md           # appunti, non importato dall'app
+├── lanzarote-itinerario.jsx # backup originale (rimosso a fine M3)
+├── Lanzorote26.md
 └── CLAUDE.md
 ```
+
+Deploy target: **Vercel** con auto-detection del preset Vite (no `vercel.json`).
 
 ## Comandi
 
@@ -47,8 +49,6 @@ Struttura finale:
 - `npm run dev` — dev server Vite (default `http://localhost:5173`)
 - `npm run build` — build di produzione in `dist/`
 - `npm run preview` — serve localmente la build di `dist/`
-
-Nota: al momento (fine M1) `src/` non esiste ancora, quindi `npm run dev` fallirebbe (entry `/src/main.jsx` mancante). Verrà reso eseguibile in M2.
 
 ## Convenzioni e vincoli operativi
 
