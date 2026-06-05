@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useLayoutEffect } from "react";
 
 const days = [
   {
@@ -125,9 +125,27 @@ const typeLabels = {
   cibo: "Cibo",
 };
 
+function getInitialTheme() {
+  try {
+    const saved = localStorage.getItem("theme");
+    if (saved === "light" || saved === "dark") return saved;
+  } catch (e) { /* localStorage non disponibile */ }
+  if (typeof window !== "undefined" && window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: light)").matches) {
+    return "light";
+  }
+  return "dark";
+}
+
 export default function LanzaroteItinerary() {
   const [openDay, setOpenDay] = useState(1);
   const [tab, setTab] = useState("itinerario");
+  const [theme, setTheme] = useState(getInitialTheme);
+
+  useLayoutEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    try { localStorage.setItem("theme", theme); } catch (e) { /* no-op */ }
+  }, [theme]);
 
   const total = budget.reduce((s, b) => s + b.amount, 0);
 
@@ -136,26 +154,56 @@ export default function LanzaroteItinerary() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #0c0806; }
+
+        /* ── Tema scuro (default) ── */
+        :root {
+          --bg: #0c0806;
+          --title: #f5ede4;
+          --title-em: #e8a86d;
+          --gold: #c9913d;
+          --gold-rgb: 201,145,61;
+          --text-rgb: 240,232,223;
+          --surface-rgb: 255,255,255;
+          --item-bg: rgba(0,0,0,.22);
+          --glow-a: rgba(200,85,30,.14);
+          --glow-b: rgba(65,179,176,.09);
+        }
+
+        /* ── Tema chiaro ── */
+        :root[data-theme="light"] {
+          --bg: #f7f1e8;
+          --title: #2a2018;
+          --title-em: #b96f2e;
+          --gold: #a8761f;
+          --gold-rgb: 168,118,31;
+          --text-rgb: 44,34,24;
+          --surface-rgb: 0,0,0;
+          --item-bg: rgba(0,0,0,.035);
+          --glow-a: rgba(200,85,30,.10);
+          --glow-b: rgba(65,179,176,.10);
+        }
+
+        body { background: var(--bg); }
 
         .app {
           min-height: 100vh;
-          background: #0c0806;
-          color: #f0e8df;
+          background: var(--bg);
+          color: rgb(var(--text-rgb));
           font-family: 'DM Sans', sans-serif;
           font-weight: 300;
           position: relative;
+          transition: background-color .35s ease, color .35s ease;
         }
         .glow-a {
           position: fixed; top: -180px; left: -80px;
           width: 550px; height: 550px;
-          background: radial-gradient(circle, rgba(200,85,30,.14) 0%, transparent 70%);
+          background: radial-gradient(circle, var(--glow-a) 0%, transparent 70%);
           pointer-events: none;
         }
         .glow-b {
           position: fixed; bottom: -160px; right: -80px;
           width: 480px; height: 480px;
-          background: radial-gradient(circle, rgba(65,179,176,.09) 0%, transparent 70%);
+          background: radial-gradient(circle, var(--glow-b) 0%, transparent 70%);
           pointer-events: none;
         }
         .wrap {
@@ -164,40 +212,57 @@ export default function LanzaroteItinerary() {
           position: relative; z-index: 1;
         }
 
+        /* Theme toggle */
+        .theme-toggle {
+          position: fixed; top: 18px; right: 18px; z-index: 10;
+          width: 40px; height: 40px; border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 17px; line-height: 1; cursor: pointer;
+          background: rgba(var(--surface-rgb),.04);
+          border: 1px solid rgba(var(--surface-rgb),.1);
+          backdrop-filter: blur(6px);
+          transition: background .2s, border-color .2s, transform .2s;
+        }
+        .theme-toggle:hover {
+          background: rgba(var(--surface-rgb),.09);
+          border-color: rgba(var(--surface-rgb),.18);
+          transform: scale(1.06);
+        }
+
         /* Header */
         .hdr { padding: 56px 0 44px; text-align: center; }
         .eyebrow {
           font-size: 9.5px; letter-spacing: 5px;
-          text-transform: uppercase; color: #c9913d; margin-bottom: 18px;
+          text-transform: uppercase; color: var(--gold); margin-bottom: 18px;
         }
         .big-title {
           font-family: 'Cormorant Garamond', serif;
           font-size: clamp(58px, 10vw, 92px);
-          font-weight: 400; line-height: .95; color: #f5ede4;
+          font-weight: 400; line-height: .95; color: var(--title);
         }
-        .big-title em { font-style: italic; color: #e8a86d; }
+        .big-title em { font-style: italic; color: var(--title-em); }
         .year {
           font-family: 'Cormorant Garamond', serif;
           font-size: clamp(28px, 5vw, 44px); font-weight: 400;
-          color: rgba(245,237,228,.22); letter-spacing: 10px; margin-top: 4px;
+          color: rgba(var(--text-rgb),.22); letter-spacing: 10px; margin-top: 4px;
         }
         .meta {
           display: flex; justify-content: center; gap: 36px;
           margin-top: 32px; padding-top: 30px;
-          border-top: 1px solid rgba(255,255,255,.07);
+          border-top: 1px solid rgba(var(--surface-rgb),.07);
         }
         .stat-val {
           display: block;
-          font-family: 'Cormorant Garamond', serif; font-size: 30px; color: #c9913d;
+          font-family: 'Cormorant Garamond', serif; font-size: 30px; color: var(--gold);
         }
         .stat-lbl {
           display: block; font-size: 9px; letter-spacing: 2.5px;
-          text-transform: uppercase; color: rgba(240,232,223,.35); margin-top: 2px;
+          text-transform: uppercase; color: rgba(var(--text-rgb),.35); margin-top: 2px;
         }
 
         /* Tabs */
         .tabs {
-          display: flex; border-bottom: 1px solid rgba(255,255,255,.08);
+          display: flex; border-bottom: 1px solid rgba(var(--surface-rgb),.08);
           margin-bottom: 36px;
         }
         .tab-btn {
@@ -205,23 +270,23 @@ export default function LanzaroteItinerary() {
           padding: 13px 26px; margin-bottom: -1px;
           font-family: 'DM Sans', sans-serif; font-size: 10.5px;
           letter-spacing: 2.5px; text-transform: uppercase;
-          color: rgba(240,232,223,.32); cursor: pointer; transition: all .2s;
+          color: rgba(var(--text-rgb),.32); cursor: pointer; transition: all .2s;
         }
-        .tab-btn:hover { color: rgba(240,232,223,.7); }
-        .tab-btn.on { color: #c9913d; border-bottom-color: #c9913d; }
+        .tab-btn:hover { color: rgba(var(--text-rgb),.7); }
+        .tab-btn.on { color: var(--gold); border-bottom-color: var(--gold); }
 
         /* Timeline */
         .timeline { display: flex; flex-direction: column; gap: 10px; }
 
         .day-card {
           border-radius: 12px;
-          border: 1px solid rgba(255,255,255,.06);
-          background: rgba(255,255,255,.02);
+          border: 1px solid rgba(var(--surface-rgb),.06);
+          background: rgba(var(--surface-rgb),.02);
           overflow: hidden;
           transition: border-color .25s;
         }
-        .day-card:hover { border-color: rgba(255,255,255,.11); }
-        .day-card.open { background: rgba(255,255,255,.03); }
+        .day-card:hover { border-color: rgba(var(--surface-rgb),.11); }
+        .day-card.open { background: rgba(var(--surface-rgb),.03); }
 
         .day-head {
           display: flex; align-items: center; gap: 18px;
@@ -255,12 +320,12 @@ export default function LanzaroteItinerary() {
 
         .badge {
           font-size: 9.5px; padding: 3px 10px; border-radius: 20px;
-          background: rgba(201,145,61,.13); color: #c9913d;
+          background: rgba(var(--gold-rgb),.13); color: var(--gold);
           white-space: nowrap; flex-shrink: 0;
         }
 
         .chevron {
-          color: rgba(240,232,223,.28); font-size: 11px;
+          color: rgba(var(--text-rgb),.28); font-size: 11px;
           flex-shrink: 0; transition: transform .3s;
         }
         .day-card.open .chevron { transform: rotate(180deg); }
@@ -271,7 +336,7 @@ export default function LanzaroteItinerary() {
 
         .day-items {
           padding: 4px 22px 22px;
-          border-top: 1px solid rgba(255,255,255,.05);
+          border-top: 1px solid rgba(var(--surface-rgb),.05);
           padding-top: 14px; margin-top: 0;
           display: flex; flex-direction: column; gap: 9px;
         }
@@ -279,12 +344,12 @@ export default function LanzaroteItinerary() {
         .item {
           display: flex; align-items: flex-start; gap: 13px;
           padding: 11px 15px; border-radius: 8px;
-          background: rgba(0,0,0,.22);
+          background: var(--item-bg);
         }
         .item-ico { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
         .item-body { flex: 1; min-width: 0; }
-        .item-txt { font-size: 13.5px; line-height: 1.45; color: rgba(240,232,223,.82); }
-        .item-note { font-size: 11px; margin-top: 3px; color: #c9913d; }
+        .item-txt { font-size: 13.5px; line-height: 1.45; color: rgba(var(--text-rgb),.82); }
+        .item-note { font-size: 11px; margin-top: 3px; color: var(--gold); }
         .item-chip {
           font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase;
           padding: 2px 8px; border-radius: 4px; flex-shrink: 0;
@@ -299,48 +364,48 @@ export default function LanzaroteItinerary() {
         .leg-item {
           display: flex; align-items: center; gap: 6px;
           font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-          color: rgba(240,232,223,.4);
+          color: rgba(var(--text-rgb),.4);
         }
         .leg-dot { width: 8px; height: 8px; border-radius: 50%; }
 
         /* Budget */
         .budget-card {
-          border: 1px solid rgba(255,255,255,.06);
+          border: 1px solid rgba(var(--surface-rgb),.06);
           border-radius: 12px; overflow: hidden;
-          background: rgba(255,255,255,.02);
+          background: rgba(var(--surface-rgb),.02);
         }
         .budget-hdr {
-          padding: 24px; border-bottom: 1px solid rgba(255,255,255,.05);
+          padding: 24px; border-bottom: 1px solid rgba(var(--surface-rgb),.05);
         }
         .budget-title {
           font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400;
         }
-        .budget-sub { font-size: 11px; color: rgba(240,232,223,.38); margin-top: 4px; }
+        .budget-sub { font-size: 11px; color: rgba(var(--text-rgb),.38); margin-top: 4px; }
         .budget-row {
           display: flex; justify-content: space-between; align-items: center;
-          padding: 13px 24px; border-bottom: 1px solid rgba(255,255,255,.04);
+          padding: 13px 24px; border-bottom: 1px solid rgba(var(--surface-rgb),.04);
           font-size: 13px;
         }
         .budget-row:last-child { border-bottom: none; }
-        .budget-lbl { color: rgba(240,232,223,.58); }
+        .budget-lbl { color: rgba(var(--text-rgb),.58); }
         .budget-amt {
-          font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #c9913d;
+          font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--gold);
         }
         .budget-total {
           padding: 20px 24px;
-          background: rgba(201,145,61,.07);
+          background: rgba(var(--gold-rgb),.07);
           display: flex; justify-content: space-between; align-items: center;
-          border-top: 1px solid rgba(201,145,61,.15);
+          border-top: 1px solid rgba(var(--gold-rgb),.15);
         }
-        .total-lbl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(240,232,223,.45); }
-        .total-amt { font-family: 'Cormorant Garamond', serif; font-size: 40px; color: #c9913d; }
+        .total-lbl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(var(--text-rgb),.45); }
+        .total-amt { font-family: 'Cormorant Garamond', serif; font-size: 40px; color: var(--gold); }
 
         .note-box {
           margin-top: 14px; padding: 16px 18px;
-          background: rgba(255,255,255,.025);
-          border: 1px solid rgba(255,255,255,.06);
-          border-left: 3px solid #c9913d; border-radius: 8px;
-          font-size: 12.5px; color: rgba(240,232,223,.5); line-height: 1.65;
+          background: rgba(var(--surface-rgb),.025);
+          border: 1px solid rgba(var(--surface-rgb),.06);
+          border-left: 3px solid var(--gold); border-radius: 8px;
+          font-size: 12.5px; color: rgba(var(--text-rgb),.5); line-height: 1.65;
         }
 
         /* Per-day accent bar */
@@ -353,6 +418,15 @@ export default function LanzaroteItinerary() {
       <div className="app">
         <div className="glow-a" />
         <div className="glow-b" />
+
+        <button
+          className="theme-toggle"
+          onClick={() => setTheme(t => (t === "dark" ? "light" : "dark"))}
+          aria-label={theme === "dark" ? "Passa al tema chiaro" : "Passa al tema scuro"}
+          title={theme === "dark" ? "Tema chiaro" : "Tema scuro"}
+        >
+          {theme === "dark" ? "☀️" : "🌙"}
+        </button>
 
         <div className="wrap">
           {/* ── Header ── */}
@@ -423,7 +497,7 @@ export default function LanzaroteItinerary() {
 
                         <div className="day-info">
                           <div className="day-date">{d.date}</div>
-                          <div className="day-ttl" style={{ color: isOpen ? d.accent : "#f5ede4" }}>
+                          <div className="day-ttl" style={{ color: isOpen ? d.accent : "var(--title)" }}>
                             {d.title}
                           </div>
                           <div className="day-sub">{d.subtitle}</div>
@@ -461,8 +535,8 @@ export default function LanzaroteItinerary() {
               </div>
 
               <div className="note-box" style={{ marginTop: 28 }}>
-                🎟️ <strong style={{ color: "rgba(240,232,223,.75)" }}>CATS Ticket</strong> — Considera l'acquisto del biglietto combinato CATS per accedere alle principali attrazioni di César Manrique (Jameos del Agua, Cueva de las Verdes, Jardín de Cactus, Fundación, ecc.) a prezzo ridotto.<br /><br />
-                🚗 <strong style={{ color: "rgba(240,232,223,.75)" }}>Auto</strong> — Ritiro Cicar: 18/06 ore 18:00 · Consegna: 25/06 ore 06:00.
+                🎟️ <strong style={{ color: "rgba(var(--text-rgb),.75)" }}>CATS Ticket</strong> — Considera l'acquisto del biglietto combinato CATS per accedere alle principali attrazioni di César Manrique (Jameos del Agua, Cueva de las Verdes, Jardín de Cactus, Fundación, ecc.) a prezzo ridotto.<br /><br />
+                🚗 <strong style={{ color: "rgba(var(--text-rgb),.75)" }}>Auto</strong> — Ritiro Cicar: 18/06 ore 18:00 · Consegna: 25/06 ore 06:00.
               </div>
             </>
           )}
@@ -490,12 +564,12 @@ export default function LanzaroteItinerary() {
               <div className="note-box">
                 💡 Le cifre per attività (Timanfaya, La Graciosa, degustazione) sono calcolate per 2 persone.
                 Il budget reale varierà in base a pasti, ingressi singoli, souvenir e scelte finali sulle attività.
-                Considera circa <strong style={{ color: "rgba(240,232,223,.75)" }}>€40–70 al giorno a persona</strong> per pasti e spese varie.
+                Considera circa <strong style={{ color: "rgba(var(--text-rgb),.75)" }}>€40–70 al giorno a persona</strong> per pasti e spese varie.
               </div>
 
               {/* Mini cost breakdown per activity */}
               <div style={{ marginTop: 20 }}>
-                <div style={{ fontSize: 10, letterSpacing: 3, textTransform: "uppercase", color: "rgba(240,232,223,.3)", marginBottom: 14 }}>
+                <div style={{ fontSize: 10, letterSpacing: 3, textTransform: "uppercase", color: "rgba(var(--text-rgb),.3)", marginBottom: 14 }}>
                   Alternative disponibili
                 </div>
                 {[
@@ -505,10 +579,10 @@ export default function LanzaroteItinerary() {
                 ].map(([label, diff], i) => (
                   <div key={i} style={{
                     display: "flex", justifyContent: "space-between",
-                    padding: "11px 0", borderBottom: "1px solid rgba(255,255,255,.04)",
+                    padding: "11px 0", borderBottom: "1px solid rgba(var(--surface-rgb),.04)",
                     fontSize: 13,
                   }}>
-                    <span style={{ color: "rgba(240,232,223,.5)" }}>{label}</span>
+                    <span style={{ color: "rgba(var(--text-rgb),.5)" }}>{label}</span>
                     <span style={{ color: diff.startsWith("+") ? "#e05252" : "#7cba6c", fontFamily: "Cormorant Garamond, serif", fontSize: 17 }}>{diff}</span>
                   </div>
                 ))}
