@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 App React **personale** per consultare un itinerario di viaggio a Lanzarote (giugno 2026). Lingua dei contenuti: italiano. L'app è un single-page React senza routing né backend.
 
-Milestone correnti completate: **M0** (CLAUDE.md), **M1** (scaffolding Vite), **M2** (componente migrato in `src/components/`). Il file originale `lanzarote-itinerario.jsx` resta ancora in root come backup fino al completamento della verifica end-to-end in M3. Piano completo: `C:\Users\sergi\.claude\plans\voglio-costuire-un-app-rosy-cloud.md`.
+Milestone completate: **M0** (CLAUDE.md), **M1** (scaffolding Vite), **M2** (componente migrato in `src/components/`), **M3** (verifica end-to-end OK: `dev` ready in 407ms, `build` 1.22s con bundle 160KB/51KB gzip; backup originale rimosso dopo verifica visiva). Piano completo: `C:\Users\sergi\.claude\plans\voglio-costuire-un-app-rosy-cloud.md`.
 
 ## Stack
 
@@ -20,7 +20,6 @@ Milestone correnti completate: **M0** (CLAUDE.md), **M1** (scaffolding Vite), **
 - **`src/App.jsx`** — wrapper minimale che renderizza `<LanzaroteItinerary />`. Aggiungere qui eventuali provider/router globali in futuro.
 - **`src/main.jsx`** — entry point: `createRoot` + `<StrictMode>` + import di `./index.css`.
 - **`src/index.css`** — reset minimo (`html, body { margin: 0 }`). Tutto il resto degli stili vive inline nel componente.
-- **`lanzarote-itinerario.jsx`** (root) — **copia originale**, mantenuta come backup fino a fine M3. Da eliminare dopo verifica end-to-end.
 - **`Lanzorote26.md`** — appunti grezzi del viaggio (voli, alloggio, noleggio auto, attrazioni, ristoranti, tour). **Fonte di verità** per le evolutive future dei contenuti. Non viene importato dall'app: serve come reference per quando si aggiorneranno i dati dell'itinerario.
 - **`README.md`** — al momento contiene solo il titolo; verrà completato in Milestone 4 con istruzioni di sviluppo e deploy.
 
@@ -36,7 +35,6 @@ Milestone correnti completate: **M0** (CLAUDE.md), **M1** (scaffolding Vite), **
 │   ├── index.css
 │   └── components/
 │       └── LanzaroteItinerary.jsx
-├── lanzarote-itinerario.jsx # backup originale (rimosso a fine M3)
 ├── Lanzorote26.md
 └── CLAUDE.md
 ```
