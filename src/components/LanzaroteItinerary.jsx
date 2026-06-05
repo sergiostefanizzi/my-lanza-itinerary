@@ -1,4 +1,8 @@
 import { useState, useLayoutEffect } from "react";
+import DayMap from "./DayMap.jsx";
+
+// Base del viaggio (alloggio): punto di partenza/ritorno delle giornate.
+const BASE = { label: "Casa Vera · Puerto del Carmen", coords: [28.918, -13.666] };
 
 const days = [
   {
@@ -17,6 +21,12 @@ const days = [
     day: 2, date: "Ven 19 Giugno", title: "Il Sud Selvaggio", accent: "#41b3b0",
     subtitle: "Smeraldo, sale e Papagayo",
     icon: "🌊",
+    stops: [
+      { label: "Playa Papagayo", coords: [28.8360, -13.7900] },
+      { label: "Playa Blanca", coords: [28.8617, -13.8300] },
+      { label: "Salinas di Janubio", coords: [28.9347, -13.8200] },
+      { label: "El Golfo · Charco Verde", coords: [28.9603, -13.8285] },
+    ],
     items: [
       { type: "attività", icon: "🤿", text: "Snorkeling e kayak – Playa Papagayo", note: "€50 / persona" },
       { type: "vista", icon: "🟢", text: "El Golfo e Charco Verde – la laguna smeraldo" },
@@ -137,10 +147,13 @@ function getInitialTheme() {
   return "dark";
 }
 
+const firstMapDay = days.find(d => d.stops)?.day ?? 1;
+
 export default function LanzaroteItinerary() {
   const [openDay, setOpenDay] = useState(1);
   const [tab, setTab] = useState("itinerario");
   const [theme, setTheme] = useState(getInitialTheme);
+  const [mapDay, setMapDay] = useState(firstMapDay);
 
   useLayoutEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -413,6 +426,68 @@ export default function LanzaroteItinerary() {
           width: 3px; align-self: stretch; border-radius: 2px;
           flex-shrink: 0; transition: opacity .25s;
         }
+
+        /* ── Mappa ── */
+        .map-daysel {
+          display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px;
+        }
+        .map-daysel-btn {
+          width: 38px; height: 38px; border-radius: 10px;
+          display: flex; align-items: center; justify-content: center;
+          font-family: 'Cormorant Garamond', serif; font-size: 19px;
+          background: rgba(var(--surface-rgb),.03);
+          border: 1px solid rgba(var(--surface-rgb),.08);
+          color: rgba(var(--text-rgb),.55);
+          cursor: pointer; transition: all .2s;
+        }
+        .map-daysel-btn:hover { border-color: rgba(var(--surface-rgb),.2); color: rgba(var(--text-rgb),.85); }
+        .map-daysel-btn.on { background: rgba(var(--surface-rgb),.05); }
+        .map-daysel-btn.disabled { opacity: .38; }
+
+        .map-head { margin-bottom: 16px; }
+        .map-head-date {
+          font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+          opacity: .38; margin-bottom: 4px;
+        }
+        .map-head-ttl {
+          font-family: 'Cormorant Garamond', serif; font-size: 32px;
+          font-weight: 500; line-height: 1.05;
+        }
+        .map-head-sub { font-size: 12px; opacity: .42; margin-top: 2px; }
+
+        .day-map-wrap {
+          height: 440px; border-radius: 14px; overflow: hidden;
+          border: 1px solid rgba(var(--surface-rgb),.08);
+        }
+        .leaflet-container { background: var(--bg); font-family: 'DM Sans', sans-serif; }
+
+        .map-stops {
+          display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 16px;
+        }
+        .map-stop { display: flex; align-items: center; gap: 9px; font-size: 13px; }
+        .map-stop-num {
+          width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 11px; font-weight: 500;
+        }
+        .map-stop-lbl { color: rgba(var(--text-rgb),.72); }
+
+        /* Leaflet DivIcon markers */
+        .daymap-pin {
+          width: 30px; height: 30px; border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+          color: #fff; background: var(--pin);
+          border: 2px solid rgba(255,255,255,.85);
+          box-shadow: 0 2px 6px rgba(0,0,0,.4);
+        }
+        .daymap-home {
+          width: 30px; height: 30px; border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 15px; background: rgba(12,8,6,.85);
+          border: 2px solid rgba(255,255,255,.7);
+          box-shadow: 0 2px 6px rgba(0,0,0,.4);
+        }
       `}</style>
 
       <div className="app">
@@ -452,9 +527,13 @@ export default function LanzaroteItinerary() {
 
           {/* ── Tabs ── */}
           <div className="tabs">
-            {["itinerario", "budget"].map(t => (
+            {[
+              ["itinerario", "Itinerario"],
+              ["budget", "Budget"],
+              ["mappa", "Mappa"],
+            ].map(([t, label]) => (
               <button key={t} className={`tab-btn ${tab === t ? "on" : ""}`} onClick={() => setTab(t)}>
-                {t === "itinerario" ? "Itinerario" : "Budget"}
+                {label}
               </button>
             ))}
           </div>
@@ -589,6 +668,56 @@ export default function LanzaroteItinerary() {
               </div>
             </>
           )}
+
+          {/* ── Mappa ── */}
+          {tab === "mappa" && (() => {
+            const selected = days.find(d => d.day === mapDay) || days[0];
+            return (
+              <>
+                <div className="map-daysel">
+                  {days.map(d => (
+                    <button
+                      key={d.day}
+                      className={`map-daysel-btn ${d.day === mapDay ? "on" : ""} ${d.stops ? "" : "disabled"}`}
+                      style={d.day === mapDay ? { borderColor: d.accent, color: d.accent } : undefined}
+                      onClick={() => setMapDay(d.day)}
+                      title={d.stops ? d.title : "Mappa non ancora disponibile"}
+                    >
+                      {d.day}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="map-head">
+                  <div className="map-head-date">{selected.date}</div>
+                  <div className="map-head-ttl" style={{ color: selected.accent }}>
+                    {selected.icon} {selected.title}
+                  </div>
+                  <div className="map-head-sub">{selected.subtitle}</div>
+                </div>
+
+                {selected.stops ? (
+                  <>
+                    <div className="day-map-wrap">
+                      <DayMap day={selected} base={BASE} theme={theme} />
+                    </div>
+                    <div className="map-stops">
+                      {selected.stops.map((s, i) => (
+                        <div key={i} className="map-stop">
+                          <span className="map-stop-num" style={{ background: `${selected.accent}1e`, color: selected.accent }}>{i + 1}</span>
+                          <span className="map-stop-lbl">{s.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <div className="note-box">
+                    🗺️ La mappa di questo giorno non è ancora disponibile. Per ora è pronta solo quella del <strong style={{ color: "rgba(var(--text-rgb),.75)" }}>Giorno {firstMapDay}</strong>.
+                  </div>
+                )}
+              </>
+            );
+          })()}
         </div>
       </div>
     </>
