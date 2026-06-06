@@ -12,7 +12,6 @@ Dal 18/06 al 25/06
 |  Bari            |17:25 - 18:55             |
 ## Parcheggio o taxi?
 
-
  - Taxi → € 28,00 da Picone ([fonte](https://bari.airports.aeroportidipuglia.it/en/da-e-per-gli-aeroporti/type/taxi/)) totale € 56
  - **Parcheggio Pinguino** → € 40 per 8 giorni di sosta
  
@@ -26,17 +25,11 @@ Cicar - 500X →  €144,66 (a coppia in totale)
 
 ## Cose da fare
 
- - Buggy → € 130 a coppia ([fonte](https://www.getyourguide.com/it-it/lanzarote-l421/tour-guidato-in-buggy-di-3-ore-a-lanzarote-t394542/?ranking_uuid=5dd78d28-5779-4a97-8dd8-d376318d4cd7)) - ogni data disponibile
+ - Buggy → € 130 a coppia ([fonte](https://www.getyourguide.com/it-it/lanzarote-l421/tour-guidato-in-buggy-di-3-ore-a-lanzarote-t394542/?ranking_uuid=5dd78d28-5779-4a97-8dd8-d376318d4cd7)) - da fare il 24 giugno alle 9:30 fino alle 11:30. Punto d'incontro DISA, Av. el Golf, 35508 Costa Teguise, Las Palmas, España
  - Tour Parco Nazionale di Timanfaya:
-	 - €57 a persona - [tour 1](https://www.getyourguide.com/it-it/lanzarote-l421/montagne-di-fuoco-nel-sud-di-lanzarote-tour-di-mezza-giornata-t28462/?ranking_uuid=5c108179-6002-4844-9de4-403e82f1f4d1) - non disponibile il 21 e 24 giugno
-	 - €57 a persona - [tour 2](https://www.getyourguide.com/it-it/lanzarote-l421/lanzarote-tour-del-parco-nazionale-di-timanfaya-t214689/?ranking_uuid=d9a23fdf-b23f-4621-b270-8bade78bc84b) - non disponibile il 20, 21 e 23 giugno
-	 - €99 a persona - [tour 3 con Parco Timanfaya, Jameos Agua e Cueva Verdes](https://www.getyourguide.com/it-it/lanzarote-l421/tour-di-lanzarote-parco-timanfaya-jameos-agua-e-cueva-verdes-t49779/?ranking_uuid=d9a23fdf-b23f-4621-b270-8bade78bc84b) - non disponibile il 20, 21 e 23 giugno
-- La Graciosa - [tour](https://www.getyourguide.com/gran-canaria-l418/isola-graciosa-jeep-safari-playa-de-las-conchas-t521939/?ranking_uuid=5ab1e26a-f69f-4585-9716-7369173c6d09) €45 a persona
-- Tour degustazione vini:
-	- [tour 1 - Bodega El Grifo](https://www.getyourguide.com/it-it/lanzarote-l421/amanti-del-vino-tour-di-degustazione-di-vini-alla-bodega-el-grifo-di-lanzarote-t427451/?ranking_uuid=f3252921-4eeb-4624-9564-86b2ad8796e1) 50€ a persona
-	- [tour 2 - vigneti di Vega de Yuco/Finca Testeina](https://www.getyourguide.com/it-it/lanzarote-l421/lanzarote-tour-dei-vigneti-con-degustazione-di-vino-e-cioccolato-t426883/?ranking_uuid=f3252921-4eeb-4624-9564-86b2ad8796e1) 24€ a persona
- - Snorkeling e kayak → 50€ a persona - [fonte](https://www.getyourguide.com/it-it/lanzarote-l421/lanzarote-kayak-e-snorkeling-alla-spiaggia-di-papagayo-t391264/?ranking_uuid=d9a23fdf-b23f-4621-b270-8bade78bc84b)
- -  kart a Lanzarote karting San Bartolomé - kart 400cc a 42€
+	 - €57 a persona - [tour 1](https://www.getyourguide.com/it-it/lanzarote-l421/montagne-di-fuoco-nel-sud-di-lanzarote-tour-di-mezza-giornata-t28462/?ranking_uuid=5c108179-6002-4844-9de4-403e82f1f4d1) - non disponibile il 21 e 24 giugno - iniza all 8:00 del mattina con prelievo a puerto del carmen e dura 5 ore
+- La Graciosa - [tour](https://www.getyourguide.com/gran-canaria-l418/isola-graciosa-jeep-safari-playa-de-las-conchas-t521939/?ranking_uuid=5ab1e26a-f69f-4585-9716-7369173c6d09) €77 a persona (compreso di biglietto per traghetto flessibile) durata 1h e 30 - ci sono 3 tour 10:30, 12:30 e 14:30. 
+- Tour degustazione vini: [Finca Testeina di Bodegas Vega ](https://www.getyourguide.com/it-it/lanzarote-l421/lanzarote-tour-dei-vigneti-al-tramonto-con-degustazione-di-vino-e-cioccolato-t827773?ranking_uuid=b4528a60-d622-4e22-91ed-e58e5667227a&date_from=2026-06-24&date_to=2026-06-24) 26€ dalle 18:30 alle 20:00. Data disponibile 24 giugno
 
 ## Cose da vedere
 
@@ -91,4 +84,3 @@ Cicar - 500X →  €144,66 (a coppia in totale)
 
 ## Note
 - biglietto CATS per diverse attrazioni
-- 

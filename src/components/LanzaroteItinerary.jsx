@@ -23,21 +23,28 @@ const days = [
     ]
   },
   {
-    day: 2, date: "Ven 19 Giugno", title: "Il Sud Selvaggio", accent: "#41b3b0",
-    subtitle: "Smeraldo, sale e Papagayo",
-    icon: "🌊",
+    day: 2, date: "Ven 19 Giugno", title: "Relax a Papagayo", accent: "#41b3b0",
+    subtitle: "Calette turchesi e dolce far niente",
+    icon: "🏖️",
     stops: [
-      { label: "Playa Papagayo", coords: [28.8360, -13.7900] },
-      { label: "Playa Blanca", coords: [28.8617, -13.8300] },
-      { label: "Salinas di Janubio", coords: [28.9347, -13.8200] },
-      { label: "El Golfo · Charco Verde", coords: [28.9603, -13.8285] },
+      { label: "Playa Mujeres", coords: [28.8430, -13.7965] },
+      { label: "Playa de Papagayo", coords: [28.8360, -13.7900] },
+      { label: "Playa de la Cera", coords: [28.8350, -13.7878] },
+      { label: "Caleta del Congrio", coords: [28.8340, -13.7860] },
+      { label: "Playa del Pozo", coords: [28.8332, -13.7838] },
+      { label: "Tramonto: Playa Blanca", coords: [28.8617, -13.8300] },
     ],
     items: [
-      { type: "attività", icon: "🤿", text: "Snorkeling e kayak – Playa Papagayo", note: "€50 / persona" },
-      { type: "vista", icon: "🟢", text: "El Golfo e Charco Verde – la laguna smeraldo" },
-      { type: "vista", icon: "⬛", text: "Salinas di Janubio e Playa Janubio (sabbia nera vulcanica)" },
-      { type: "vista", icon: "🏖️", text: "Playa Blanca" },
-      { type: "cibo", icon: "🍽️", text: "Cena: BePapagayo" },
+      { type: "vista", icon: "🏖️", text: "Calette di Papagayo — giornata in spiaggia", time: "10:00", cost: "free", note: "Accesso 9:00–19:00 · €3 a veicolo (solo carta) · 5 calette su un sentiero di 1,5 km: spostati liberamente. Uscita entro le 19:00" },
+      { type: "attività", icon: "🤿", text: "Snorkeling in autonomia nelle calette turchesi", time: "11:00" },
+      { type: "cibo", icon: "🥪", text: "Pranzo: picnic in spiaggia (a Papagayo non ci sono locali)", time: "13:30" },
+      { type: "vista", icon: "🌅", text: "Tramonto a Playa Blanca", time: "21:00", note: "A giugno il sole tramonta verso le 21:00" },
+      { type: "cibo", icon: "🍽️", text: "Cena: BePapagayo", time: "21:15", note: "Sul lungomare di Playa Blanca, vista mare" },
+      { type: "vista", icon: "🏖️", text: "Playa Mujeres", optional: true, note: "La più ampia, sabbia dorata · vicino a Playa Blanca" },
+      { type: "vista", icon: "🏖️", text: "Playa de Papagayo", optional: true, note: "La cartolina: cala riparata tra le falesie" },
+      { type: "vista", icon: "🏖️", text: "Playa de la Cera", optional: true, note: "Piccola e tranquilla" },
+      { type: "vista", icon: "🏖️", text: "Caleta del Congrio", optional: true, note: "Appartata (anche naturisti)" },
+      { type: "vista", icon: "🏖️", text: "Playa del Pozo", optional: true, note: "Ampia e di solito meno affollata" },
     ]
   },
   {
@@ -51,19 +58,19 @@ const days = [
       { label: "Cueva de los Verdes", coords: [29.1564, -13.4380] },
       { label: "Jameos del Agua", coords: [29.1577, -13.4322] },
       { label: "Piscine naturali di Punta Mujeres", coords: [29.1490, -13.4490] },
-      { label: "Cena: Kamezi · Costa Teguise", coords: [28.9966, -13.5030] },
     ],
     items: [
-      { type: "attività", icon: "🛒", text: "Mercado Artesanal de Haría", note: "Solo il sabato!" },
-      { type: "vista", icon: "🌵", text: "Jardín de Cactus" },
-      { type: "vista", icon: "💧", text: "Jameos del Agua" },
-      { type: "vista", icon: "🕳️", text: "Cueva de las Verdes – tubo lavico da 6 km" },
-      { type: "vista", icon: "🏊", text: "Piscine naturali di Punta Mujeres" },
-      { type: "cibo", icon: "🍽️", text: "Cena: Kamezi" },
+      { type: "vista", icon: "🌵", text: "Jardín de Cactus", time: "10:00", cost: "cact", price: "€9", note: "Apre 10:00 · ultimo ingresso 16:30" },
+      { type: "vista", icon: "🕳️", text: "Cueva de los Verdes – tubo lavico da 6 km", time: "11:45", cost: "cact", price: "€17", note: "Visita guidata ~50 min · prenotazione online · chiude 16:15" },
+      { type: "cibo", icon: "🍽️", text: "Pranzo: Arrieta (pesce fresco)", time: "13:00", note: "Villaggio di pescatori, accanto ai Jameos" },
+      { type: "vista", icon: "💧", text: "Jameos del Agua", time: "14:15", cost: "cact", price: "€17", note: "Visita ~1–1,5 h · aperto fino alle 18:00" },
+      { type: "cibo", icon: "🍽️", text: "Cena: Punta Mujeres (pesce sul mare)", time: "20:00" },
+      { type: "attività", icon: "🛒", text: "Mercado Artesanal de Haría", cost: "free", optional: true, note: "Solo sabato, chiude alle 14:30 · da incastrare in mattinata" },
+      { type: "vista", icon: "🏊", text: "Piscine naturali di Punta Mujeres", cost: "free", optional: true, note: "Nel pomeriggio dopo i Jameos · con la marea" },
     ]
   },
   {
-    day: 4, date: "Dom 21 Giugno", title: "La Graciosa", accent: "#e8a86d",
+    day: 4, date: "Dom 21 Giugno", title: "La Graciosa e l'estremo Nord", accent: "#e8a86d",
     subtitle: "L'ultimo paradiso vergine d'Europa",
     icon: "🏝️",
     stops: [
@@ -71,31 +78,38 @@ const days = [
       { label: "Caleta de Sebo · La Graciosa", coords: [29.2298, -13.5034] },
       { label: "Playa de las Conchas", coords: [29.2685, -13.5170] },
       { label: "Playa Bermeja", coords: [29.2640, -13.5230] },
-      { label: "Cena: Teleclub · Caleta de Sebo", coords: [29.2305, -13.5040] },
+      { label: "Pranzo: Teleclub · Caleta de Sebo", coords: [29.2305, -13.5040] },
+      { label: "Mirador del Río", coords: [29.2120, -13.4790] },
+      { label: "Caletón Blanco (al rientro)", coords: [29.2110, -13.4670] },
     ],
     items: [
-      { type: "attività", icon: "⛵", text: "Tour Jeep Safari – La Graciosa (giornata intera)", note: "€45 / persona" },
-      { type: "vista", icon: "🏖️", text: "Playa de las Conchas – sabbia dorata e vulcano Bermeja" },
-      { type: "vista", icon: "🌋", text: "Playa Bermeja – la cartolina surrealista" },
-      { type: "cibo", icon: "🍽️", text: "Cena: Teleclub" },
+      { type: "attività", icon: "⛵", text: "Tour Jeep Safari – La Graciosa", time: "10:30", cost: "paid", price: "€77", note: "Traghetto incluso (25 min) · safari ~1h30 · slot 10:30 da Órzola" },
+      { type: "vista", icon: "🏖️", text: "Playa de las Conchas – sabbia dorata e vulcano Bermeja", time: "11:30" },
+      { type: "vista", icon: "🌋", text: "Playa Bermeja – la cartolina surrealista", time: "12:15" },
+      { type: "cibo", icon: "🍽️", text: "Pranzo a Caleta de Sebo: Teleclub", time: "13:30" },
+      { type: "vista", icon: "👁️", text: "Mirador del Río – panorama su La Graciosa", time: "16:15", cost: "cact", price: "€9", note: "~30 min · chiude 17:00 (ultimo ingresso 16:40) · rientra in tempo dal traghetto" },
+      { type: "cibo", icon: "🍽️", text: "Cena: Casa Tino (al rientro)", time: "20:30" },
+      { type: "vista", icon: "🏝️", text: "Caletón Blanco – lava nera e acqua smeraldo", cost: "free", optional: true, note: "Sosta-bagno tra Órzola e il Mirador, se hai tempo" },
     ]
   },
   {
-    day: 5, date: "Lun 22 Giugno", title: "Fuoco e Vino", accent: "#e05252",
-    subtitle: "Timanfaya, lava e Malvasía",
+    day: 5, date: "Lun 22 Giugno", title: "Timanfaya e il Sud vulcanico", accent: "#e05252",
+    subtitle: "Marte è a Lanzarote",
     icon: "🔥",
     stops: [
-      { label: "Casa Museo del Campesino", coords: [29.0010, -13.6420] },
-      { label: "Degustazione: Bodega Vega de Yuco", coords: [28.9870, -13.6800] },
-      { label: "La Geria (vigneti)", coords: [28.9760, -13.7250] },
       { label: "Parco di Timanfaya · El Diablo", coords: [28.9956, -13.7555] },
+      { label: "Las Grietas", coords: [28.9850, -13.7090] },
+      { label: "El Golfo · Charco de los Clicos", coords: [28.9603, -13.8285] },
+      { label: "Salinas e Playa di Janubio", coords: [28.9347, -13.8200] },
     ],
     items: [
-      { type: "attività", icon: "🌋", text: "Tour Parco Nazionale di Timanfaya", note: "€57 / persona" },
-      { type: "vista", icon: "🍇", text: "La Geria – i vigneti nei crateri vulcanici" },
-      { type: "attività", icon: "🍷", text: "Degustazione vini – Bodega El Grifo o Vega de Yuco", note: "€24–50 / persona" },
-      { type: "vista", icon: "🏡", text: "Casa Museo del Campesino" },
-      { type: "cibo", icon: "🍽️", text: "Cena: El Diablo (ristorante nel parco!)" },
+      { type: "attività", icon: "🌋", text: "Tour Parco Nazionale di Timanfaya", time: "08:00", cost: "paid", price: "€57", note: "5 ore (8:00–13:00) · prelievo e rientro a Puerto del Carmen" },
+      { type: "cibo", icon: "🍽️", text: "Pranzo: El Diablo (nel parco)", time: "13:00", note: "Ristorante di Manrique nel parco, grill geotermico" },
+      { type: "vista", icon: "🪨", text: "Las Grietas", time: "14:30", cost: "free", note: "Sosta breve ~30 min" },
+      { type: "vista", icon: "🟢", text: "El Golfo e Charco de los Clicos – la laguna smeraldo", time: "15:30", cost: "free", note: "Passeggiata ~45 min" },
+      { type: "vista", icon: "⬛", text: "Salinas e Playa di Janubio – sabbia nera e onde selvagge", time: "16:30", cost: "free" },
+      { type: "cibo", icon: "🍽️", text: "Cena: Mirador de las Salinas", time: "21:00", note: "Tramonto sulle saline di Janubio" },
+      { type: "cibo", icon: "🍷", text: "Pranzo alternativo: La Bodega de Santiago (Yaiza)", optional: true, note: "In alternativa a El Diablo, sulla strada verso la costa" },
     ]
   },
   {
@@ -103,36 +117,40 @@ const days = [
     subtitle: "Arte, architettura e panorami senza fine",
     icon: "🎨",
     stops: [
-      { label: "Las Grietas", coords: [28.9850, -13.7090] },
+      { label: "Casa Museo del Campesino", coords: [29.0010, -13.6420] },
       { label: "Fundación César Manrique · Tahíche", coords: [29.0470, -13.5640] },
       { label: "Lagomar Museo · Nazaret", coords: [29.0530, -13.5560] },
       { label: "Teguise", coords: [29.0600, -13.5610] },
       { label: "Caleta de Famara", coords: [29.1150, -13.5640] },
-      { label: "Mirador del Río", coords: [29.2120, -13.4790] },
     ],
     items: [
-      { type: "vista", icon: "🎨", text: "Fundación César Manrique" },
-      { type: "vista", icon: "🏛️", text: "Lagomar Museo" },
-      { type: "vista", icon: "🏘️", text: "Teguise – l'antica capitale" },
-      { type: "vista", icon: "🪨", text: "Las Grietas" },
-      { type: "vista", icon: "🌊", text: "Caleta de Famara e Mirador del Rio" },
-      { type: "cibo", icon: "🍽️", text: "Cena: La Tabla o Barlovento" },
+      { type: "vista", icon: "🏡", text: "Casa Museo del Campesino", time: "10:00", cost: "free", note: "Centro CACT a ingresso gratuito · 10:00–18:00 · ~30 min" },
+      { type: "vista", icon: "🎨", text: "Fundación César Manrique", time: "11:00", cost: "paid", price: "€10", note: "10:00–17:30 (cassa fino 17:00) · ~1–1,5 h · non CACT" },
+      { type: "vista", icon: "🏛️", text: "Lagomar – Casa Omar Sharif", time: "12:45", cost: "paid", price: "€10", note: "10:00–18:00 · ~45 min · non CACT" },
+      { type: "cibo", icon: "🍽️", text: "Pranzo: La Tabla (Teguise)", time: "13:45" },
+      { type: "vista", icon: "🏘️", text: "Teguise – l'antica capitale", time: "15:30", cost: "free", note: "Passeggiata nel centro storico (il mercato è la domenica) · ~1 h" },
+      { type: "cibo", icon: "🍽️", text: "Cena: Barlovento (Teguise)", time: "21:00" },
+      { type: "vista", icon: "🌊", text: "Caleta de Famara – onde, surf e la Scogliera", cost: "free", optional: true, note: "Spiaggia per il tardo pomeriggio/tramonto, se hai tempo" },
     ]
   },
   {
-    day: 7, date: "Mer 24 Giugno", title: "Adrenalina", accent: "#f4a261",
-    subtitle: "L'ultima avventura sull'isola",
+    day: 7, date: "Mer 24 Giugno", title: "Buggy, Arrecife e Vino", accent: "#f4a261",
+    subtitle: "Adrenalina, capitale e tramonto in vigna",
     icon: "🏎️",
     stops: [
-      { label: "Buggy Tour · Puerto del Carmen", coords: [28.9230, -13.6800] },
-      { label: "Gran Karting · San Bartolomé", coords: [28.9630, -13.6360] },
-      { label: "Tramonto · Puerto del Carmen", coords: [28.9215, -13.6720] },
+      { label: "Buggy Tour · Costa Teguise (DISA)", coords: [29.0005, -13.4995] },
+      { label: "Arrecife · Charco de San Ginés", coords: [28.9630, -13.5470] },
+      { label: "Islote de la Fermina · Arrecife", coords: [28.9620, -13.5340] },
+      { label: "La Geria (vigneti)", coords: [28.9760, -13.7250] },
+      { label: "Degustazione: Finca Testeina · La Geria", coords: [28.9850, -13.6800] },
     ],
     items: [
-      { type: "attività", icon: "🚙", text: "Buggy Tour – 3 ore", note: "€130 / coppia" },
-      { type: "attività", icon: "🏎️", text: "Kart a San Bartolomé (400cc)", note: "€42 / persona" },
-      { type: "vista", icon: "🌅", text: "Tramonto finale a Puerto del Carmen" },
-      { type: "cibo", icon: "🍽️", text: "Cena d'addio: Meneo o La Bodega de Santiago" },
+      { type: "attività", icon: "🚙", text: "Buggy Tour", time: "09:30", cost: "paid", price: "€65", note: "9:30–11:30 (~2 h) · €130 / coppia · ritrovo Costa Teguise" },
+      { type: "vista", icon: "🏛️", text: "Arrecife: Charco de San Ginés e Islote de la Fermina", time: "12:00", cost: "free", note: "Passeggiata in città ~1–1,5 h" },
+      { type: "cibo", icon: "🍣", text: "Pranzo: Oppa (Arrecife)", time: "13:30" },
+      { type: "vista", icon: "🍇", text: "La Geria – i vigneti nei crateri vulcanici", time: "15:30", cost: "free", note: "Strada panoramica tra i vigneti" },
+      { type: "attività", icon: "🍷", text: "Degustazione al tramonto – Finca Testeina", time: "18:30", cost: "paid", price: "€26", note: "18:30–20:00 (~1,5 h) · vino e cioccolato" },
+      { type: "cibo", icon: "🍽️", text: "Cena d'addio: Meneo", time: "20:30" },
     ]
   },
   {
@@ -155,12 +173,17 @@ const days = [
 const budget = [
   { label: "Noleggio auto (coppia, 7 giorni)", amount: 144.66 },
   { label: "Parcheggio Pinguino – Bari", amount: 40.00 },
-  { label: "Snorkeling e kayak – Papagayo", amount: 100.00 },
-  { label: "Tour La Graciosa (×2)", amount: 90.00 },
+  { label: "Tour La Graciosa (×2)", amount: 154.00 },
   { label: "Tour Timanfaya (×2)", amount: 114.00 },
-  { label: "Degustazione vini – Vega de Yuco (×2)", amount: 48.00 },
   { label: "Buggy Tour (coppia)", amount: 130.00 },
-  { label: "Kart San Bartolomé (×2)", amount: 84.00 },
+  { label: "Degustazione Finca Testeina (×2)", amount: 52.00 },
+  { label: "Jardín de Cactus · CACT (×2)", amount: 18.00 },
+  { label: "Cueva de los Verdes · CACT (×2)", amount: 34.00 },
+  { label: "Jameos del Agua · CACT (×2)", amount: 34.00 },
+  { label: "Mirador del Río · CACT (×2)", amount: 18.00 },
+  { label: "Fundación César Manrique (×2)", amount: 20.00 },
+  { label: "Lagomar (×2)", amount: 20.00 },
+  { label: "Accesso Papagayo (auto)", amount: 3.00 },
 ];
 
 const typeColors = {
@@ -447,6 +470,23 @@ export default function LanzaroteItinerary() {
         .item:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
         .item.done { opacity: .45; }
 
+        /* Sezione opzionali */
+        .opt-divider {
+          display: flex; align-items: center; gap: 12px;
+          margin: 10px 2px 3px;
+          font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase;
+          color: rgba(var(--text-rgb),.34);
+        }
+        .opt-divider::before, .opt-divider::after {
+          content: ""; flex: 1; height: 1px;
+          background: rgba(var(--surface-rgb),.09);
+        }
+        .item.optional {
+          background: transparent;
+          border: 1px dashed rgba(var(--surface-rgb),.14);
+        }
+        .item.optional:hover { background: rgba(var(--surface-rgb),.04); }
+
         /* Spunta circolare */
         .item-check {
           width: 21px; height: 21px; border-radius: 50%; flex-shrink: 0;
@@ -466,6 +506,12 @@ export default function LanzaroteItinerary() {
         }
         .item.done .item-check-tick { transform: scale(1); }
 
+        .item-time {
+          flex-shrink: 0; min-width: 42px; text-align: right; margin-top: 2px;
+          font-family: 'Cormorant Garamond', serif; font-size: 15px;
+          line-height: 1.2; font-variant-numeric: tabular-nums;
+          color: var(--accent); opacity: .92; white-space: nowrap;
+        }
         .item-ico { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
         .item-body { flex: 1; min-width: 0; }
         .item-txt {
@@ -479,6 +525,17 @@ export default function LanzaroteItinerary() {
         }
         .item.done .item-txt { background-size: 100% 1px; }
         .item-note { font-size: 11px; margin-top: 3px; color: var(--gold); }
+
+        /* Marcatori costo / CACT */
+        .item-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+        .cost-tag {
+          font-size: 9px; letter-spacing: 1px; text-transform: uppercase;
+          padding: 2px 7px; border-radius: 4px; white-space: nowrap;
+          border: 1px solid transparent;
+        }
+        .cost-cact { background: rgba(var(--gold-rgb),.14); color: var(--gold); border-color: rgba(var(--gold-rgb),.32); }
+        .cost-paid { background: rgba(224,82,82,.12); color: #e05252; }
+        .cost-free { background: rgba(124,186,108,.14); color: #7cba6c; }
         .item-chip {
           font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase;
           padding: 2px 8px; border-radius: 4px; flex-shrink: 0;
@@ -669,7 +726,60 @@ export default function LanzaroteItinerary() {
               <div className="timeline">
                 {days.map(d => {
                   const isOpen = openDay === d.day;
-                  const dayDone = d.items.length > 0 && d.items.every((_, i) => done.has(`${d.day}-${i}`));
+                  // Il giorno è "completato" solo quando tutte le voci OBBLIGATORIE sono spuntate.
+                  const hasMandatory = d.items.some(it => !it.optional);
+                  const dayDone = hasMandatory && d.items.every((it, i) => it.optional || done.has(`${d.day}-${i}`));
+                  const indexed = d.items.map((item, i) => ({ item, i }));
+                  const mandatoryItems = indexed.filter(x => !x.item.optional);
+                  const optionalItems = indexed.filter(x => x.item.optional);
+                  const renderItem = ({ item, i }) => {
+                    const key = `${d.day}-${i}`;
+                    const isDone = done.has(key);
+                    return (
+                      <div
+                        key={i}
+                        className={`item ${isDone ? "done" : ""} ${item.optional ? "optional" : ""}`}
+                        style={{ "--accent": d.accent }}
+                        onClick={() => toggleDone(key)}
+                        role="button"
+                        tabIndex={0}
+                        aria-pressed={isDone}
+                        aria-label={`${isDone ? "Segna come da fare" : "Segna come completata"}: ${item.text}`}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            toggleDone(key);
+                          }
+                        }}
+                      >
+                        <div className="item-check">
+                          <span className="item-check-tick">✓</span>
+                        </div>
+                        {item.time && <div className="item-time">{item.time}</div>}
+                        <div className="item-ico">{item.icon}</div>
+                        <div className="item-body">
+                          <div className="item-txt">{item.text}</div>
+                          {item.note && <div className="item-note">{item.note}</div>}
+                          {item.cost && (
+                            <div className="item-tags">
+                              {item.cost === "cact" && <span className="cost-tag cost-cact">🎟️ CACT{item.price ? ` · ${item.price} a persona` : ""}</span>}
+                              {item.cost === "paid" && <span className="cost-tag cost-paid">{item.price ? `${item.price} a persona` : "€ a pagamento"}</span>}
+                              {item.cost === "free" && <span className="cost-tag cost-free">Gratis</span>}
+                            </div>
+                          )}
+                        </div>
+                        <div
+                          className="item-chip"
+                          style={{
+                            background: `${typeColors[item.type]}1e`,
+                            color: typeColors[item.type],
+                          }}
+                        >
+                          {typeLabels[item.type]}
+                        </div>
+                      </div>
+                    );
+                  };
                   return (
                     <div
                       key={d.day}
@@ -706,46 +816,13 @@ export default function LanzaroteItinerary() {
 
                       <div className="day-body">
                         <div className="day-items">
-                          {d.items.map((item, i) => {
-                            const key = `${d.day}-${i}`;
-                            const isDone = done.has(key);
-                            return (
-                              <div
-                                key={i}
-                                className={`item ${isDone ? "done" : ""}`}
-                                style={{ "--accent": d.accent }}
-                                onClick={() => toggleDone(key)}
-                                role="button"
-                                tabIndex={0}
-                                aria-pressed={isDone}
-                                aria-label={`${isDone ? "Segna come da fare" : "Segna come completata"}: ${item.text}`}
-                                onKeyDown={(e) => {
-                                  if (e.key === "Enter" || e.key === " ") {
-                                    e.preventDefault();
-                                    toggleDone(key);
-                                  }
-                                }}
-                              >
-                                <div className="item-check">
-                                  <span className="item-check-tick">✓</span>
-                                </div>
-                                <div className="item-ico">{item.icon}</div>
-                                <div className="item-body">
-                                  <div className="item-txt">{item.text}</div>
-                                  {item.note && <div className="item-note">{item.note}</div>}
-                                </div>
-                                <div
-                                  className="item-chip"
-                                  style={{
-                                    background: `${typeColors[item.type]}1e`,
-                                    color: typeColors[item.type],
-                                  }}
-                                >
-                                  {typeLabels[item.type]}
-                                </div>
-                              </div>
-                            );
-                          })}
+                          {mandatoryItems.map(renderItem)}
+                          {optionalItems.length > 0 && (
+                            <>
+                              <div className="opt-divider"><span>Opzionali</span></div>
+                              {optionalItems.map(renderItem)}
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -754,7 +831,7 @@ export default function LanzaroteItinerary() {
               </div>
 
               <div className="note-box" style={{ marginTop: 28 }}>
-                🎟️ <strong style={{ color: "rgba(var(--text-rgb),.75)" }}>CATS Ticket</strong> — Considera l'acquisto del biglietto combinato CATS per accedere alle principali attrazioni di César Manrique (Jameos del Agua, Cueva de las Verdes, Jardín de Cactus, Fundación, ecc.) a prezzo ridotto.<br /><br />
+                🎟️ <strong style={{ color: "rgba(var(--text-rgb),.75)" }}>Biglietti CACT</strong> — Le voci segnate <strong style={{ color: "var(--gold)" }}>🎟️ CACT</strong> (Jardín de Cactus, Cueva de los Verdes, Jameos del Agua, Mirador del Río, Timanfaya) sono i Centri d'Arte del Cabildo di Lanzarote: l'ingresso si acquista online su <a href="https://ventaonline.cactlanzarote.com" target="_blank" rel="noreferrer" style={{ color: "var(--gold)" }}>ventaonline.cactlanzarote.com</a>, prenotando <strong style={{ color: "rgba(var(--text-rgb),.75)" }}>data e ora</strong> (obbligatorio per la Cueva de los Verdes). Il vecchio <em>bono</em> combinato multi-centro non è più disponibile (dal 2024): si comprano biglietti singoli. La Casa Museo del Campesino è <strong style={{ color: "rgba(var(--text-rgb),.75)" }}>gratuita</strong>; Fundación César Manrique e Lagomar hanno biglietti propri (non CACT).<br /><br />
                 🚗 <strong style={{ color: "rgba(var(--text-rgb),.75)" }}>Auto</strong> — Ritiro Cicar: 18/06 ore 18:00 · Consegna: 25/06 ore 06:00.
               </div>
             </>
@@ -781,30 +858,9 @@ export default function LanzaroteItinerary() {
               </div>
 
               <div className="note-box">
-                💡 Le cifre per attività (Timanfaya, La Graciosa, degustazione) sono calcolate per 2 persone.
-                Il budget reale varierà in base a pasti, ingressi singoli, souvenir e scelte finali sulle attività.
-                Considera circa <strong style={{ color: "rgba(var(--text-rgb),.75)" }}>€40–70 al giorno a persona</strong> per pasti e spese varie.
-              </div>
-
-              {/* Mini cost breakdown per activity */}
-              <div style={{ marginTop: 20 }}>
-                <div style={{ fontSize: 10, letterSpacing: 3, textTransform: "uppercase", color: "rgba(var(--text-rgb),.3)", marginBottom: 14 }}>
-                  Alternative disponibili
-                </div>
-                {[
-                  ["Degustazione El Grifo (vs Vega de Yuco)", "+€52 coppia"],
-                  ["Tour Timanfaya + Jameos + Cueva (Tour 3)", "+€84 coppia"],
-                  ["Parcheggio Bari (vs taxi €56)", "−€16 coppia"],
-                ].map(([label, diff], i) => (
-                  <div key={i} style={{
-                    display: "flex", justifyContent: "space-between",
-                    padding: "11px 0", borderBottom: "1px solid rgba(var(--surface-rgb),.04)",
-                    fontSize: 13,
-                  }}>
-                    <span style={{ color: "rgba(var(--text-rgb),.5)" }}>{label}</span>
-                    <span style={{ color: diff.startsWith("+") ? "#e05252" : "#7cba6c", fontFamily: "Cormorant Garamond, serif", fontSize: 17 }}>{diff}</span>
-                  </div>
-                ))}
+                💡 Le cifre per attività e ingressi sono calcolate per 2 persone (ingressi CACT e musei inclusi).
+                Esclusi voli, alloggio e pasti: considera circa <strong style={{ color: "rgba(var(--text-rgb),.75)" }}>€40–70 al giorno a persona</strong> per pasti e spese varie.
+                Prezzi e orari sono indicativi, da riverificare prima del viaggio.
               </div>
             </>
           )}
