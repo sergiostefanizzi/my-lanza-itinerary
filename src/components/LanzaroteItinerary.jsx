@@ -23,20 +23,20 @@ const days = [
     ]
   },
   {
-    day: 2, date: "Ven 19 Giugno", title: "Il Sud Selvaggio", accent: "#41b3b0",
-    subtitle: "Smeraldo, sale e Papagayo",
-    icon: "🌊",
+    day: 2, date: "Ven 19 Giugno", title: "Relax a Papagayo", accent: "#41b3b0",
+    subtitle: "Calette turchesi e dolce far niente",
+    icon: "🏖️",
     stops: [
+      { label: "Playa Mujeres", coords: [28.8430, -13.7965] },
       { label: "Playa Papagayo", coords: [28.8360, -13.7900] },
-      { label: "Playa Blanca", coords: [28.8617, -13.8300] },
-      { label: "Salinas di Janubio", coords: [28.9347, -13.8200] },
-      { label: "El Golfo · Charco Verde", coords: [28.9603, -13.8285] },
+      { label: "Caleta del Congrio", coords: [28.8340, -13.7860] },
+      { label: "Tramonto: Playa Blanca", coords: [28.8617, -13.8300] },
     ],
     items: [
-      { type: "attività", icon: "🤿", text: "Snorkeling e kayak – Playa Papagayo", note: "€50 / persona" },
-      { type: "vista", icon: "🟢", text: "El Golfo e Charco Verde – la laguna smeraldo" },
-      { type: "vista", icon: "⬛", text: "Salinas di Janubio e Playa Janubio (sabbia nera vulcanica)" },
-      { type: "vista", icon: "🏖️", text: "Playa Blanca" },
+      { type: "vista", icon: "🏖️", text: "Spiagge di Papagayo: Playa Mujeres, Papagayo, Caleta del Congrio", note: "Ingresso monumento naturale ~€3/auto" },
+      { type: "attività", icon: "🤿", text: "Snorkeling in autonomia nelle calette turchesi" },
+      { type: "vista", icon: "🧺", text: "Relax e picnic tra le calette protette" },
+      { type: "vista", icon: "🌅", text: "Tramonto e passeggiata a Playa Blanca" },
       { type: "cibo", icon: "🍽️", text: "Cena: BePapagayo" },
     ]
   },
@@ -71,31 +71,33 @@ const days = [
       { label: "Caleta de Sebo · La Graciosa", coords: [29.2298, -13.5034] },
       { label: "Playa de las Conchas", coords: [29.2685, -13.5170] },
       { label: "Playa Bermeja", coords: [29.2640, -13.5230] },
-      { label: "Cena: Teleclub · Caleta de Sebo", coords: [29.2305, -13.5040] },
+      { label: "Pranzo: Teleclub · Caleta de Sebo", coords: [29.2305, -13.5040] },
+      { label: "Caletón Blanco (al rientro)", coords: [29.2110, -13.4670] },
     ],
     items: [
-      { type: "attività", icon: "⛵", text: "Tour Jeep Safari – La Graciosa (giornata intera)", note: "€45 / persona" },
+      { type: "attività", icon: "⛵", text: "Tour Jeep Safari – La Graciosa (traghetto incluso)", note: "€77 / persona · slot 10:30" },
       { type: "vista", icon: "🏖️", text: "Playa de las Conchas – sabbia dorata e vulcano Bermeja" },
       { type: "vista", icon: "🌋", text: "Playa Bermeja – la cartolina surrealista" },
-      { type: "cibo", icon: "🍽️", text: "Cena: Teleclub" },
+      { type: "cibo", icon: "🍽️", text: "Pranzo a Caleta de Sebo: Teleclub" },
+      { type: "vista", icon: "🏝️", text: "Caletón Blanco – lava nera e acqua smeraldo (al rientro)" },
     ]
   },
   {
-    day: 5, date: "Lun 22 Giugno", title: "Fuoco e Vino", accent: "#e05252",
-    subtitle: "Timanfaya, lava e Malvasía",
+    day: 5, date: "Lun 22 Giugno", title: "Fuoco e Lava", accent: "#e05252",
+    subtitle: "Timanfaya, lava e vigneti",
     icon: "🔥",
     stops: [
-      { label: "Casa Museo del Campesino", coords: [29.0010, -13.6420] },
-      { label: "Degustazione: Bodega Vega de Yuco", coords: [28.9870, -13.6800] },
-      { label: "La Geria (vigneti)", coords: [28.9760, -13.7250] },
       { label: "Parco di Timanfaya · El Diablo", coords: [28.9956, -13.7555] },
+      { label: "La Geria (vigneti)", coords: [28.9760, -13.7250] },
+      { label: "Bodega El Grifo · museo del vino", coords: [28.9760, -13.6770] },
+      { label: "Casa Museo del Campesino", coords: [29.0010, -13.6420] },
     ],
     items: [
-      { type: "attività", icon: "🌋", text: "Tour Parco Nazionale di Timanfaya", note: "€57 / persona" },
+      { type: "attività", icon: "🌋", text: "Tour Parco Nazionale di Timanfaya (8:00–13:00)", note: "€57 / persona" },
       { type: "vista", icon: "🍇", text: "La Geria – i vigneti nei crateri vulcanici" },
-      { type: "attività", icon: "🍷", text: "Degustazione vini – Bodega El Grifo o Vega de Yuco", note: "€24–50 / persona" },
+      { type: "vista", icon: "🍷", text: "Bodega El Grifo – la bodega più antica delle Canarie" },
       { type: "vista", icon: "🏡", text: "Casa Museo del Campesino" },
-      { type: "cibo", icon: "🍽️", text: "Cena: El Diablo (ristorante nel parco!)" },
+      { type: "cibo", icon: "🍽️", text: "Pranzo: El Diablo (nel parco) · Cena: La Bodega de Santiago" },
     ]
   },
   {
@@ -120,19 +122,20 @@ const days = [
     ]
   },
   {
-    day: 7, date: "Mer 24 Giugno", title: "Adrenalina", accent: "#f4a261",
-    subtitle: "L'ultima avventura sull'isola",
+    day: 7, date: "Mer 24 Giugno", title: "Buggy, Arrecife e Vino", accent: "#f4a261",
+    subtitle: "Adrenalina, capitale e tramonto in vigna",
     icon: "🏎️",
     stops: [
-      { label: "Buggy Tour · Puerto del Carmen", coords: [28.9230, -13.6800] },
-      { label: "Gran Karting · San Bartolomé", coords: [28.9630, -13.6360] },
-      { label: "Tramonto · Puerto del Carmen", coords: [28.9215, -13.6720] },
+      { label: "Buggy Tour · Costa Teguise (DISA)", coords: [29.0005, -13.4995] },
+      { label: "Arrecife · Charco de San Ginés", coords: [28.9630, -13.5470] },
+      { label: "Islote de la Fermina · Arrecife", coords: [28.9620, -13.5340] },
+      { label: "Degustazione: Finca Testeina · La Geria", coords: [28.9850, -13.6800] },
     ],
     items: [
-      { type: "attività", icon: "🚙", text: "Buggy Tour – 3 ore", note: "€130 / coppia" },
-      { type: "attività", icon: "🏎️", text: "Kart a San Bartolomé (400cc)", note: "€42 / persona" },
-      { type: "vista", icon: "🌅", text: "Tramonto finale a Puerto del Carmen" },
-      { type: "cibo", icon: "🍽️", text: "Cena d'addio: Meneo o La Bodega de Santiago" },
+      { type: "attività", icon: "🚙", text: "Buggy Tour (9:30–11:30)", note: "€130 / coppia · ritrovo Costa Teguise" },
+      { type: "vista", icon: "🏛️", text: "Arrecife: Charco de San Ginés e Islote de la Fermina" },
+      { type: "attività", icon: "🍷", text: "Degustazione al tramonto – Finca Testeina (18:30–20:00)", note: "€26 / persona · vino e cioccolato" },
+      { type: "cibo", icon: "🍽️", text: "Cena d'addio: Meneo o Casa Tino" },
     ]
   },
   {
@@ -155,12 +158,10 @@ const days = [
 const budget = [
   { label: "Noleggio auto (coppia, 7 giorni)", amount: 144.66 },
   { label: "Parcheggio Pinguino – Bari", amount: 40.00 },
-  { label: "Snorkeling e kayak – Papagayo", amount: 100.00 },
-  { label: "Tour La Graciosa (×2)", amount: 90.00 },
+  { label: "Tour La Graciosa (×2)", amount: 154.00 },
   { label: "Tour Timanfaya (×2)", amount: 114.00 },
-  { label: "Degustazione vini – Vega de Yuco (×2)", amount: 48.00 },
   { label: "Buggy Tour (coppia)", amount: 130.00 },
-  { label: "Kart San Bartolomé (×2)", amount: 84.00 },
+  { label: "Degustazione Finca Testeina (×2)", amount: 52.00 },
 ];
 
 const typeColors = {
@@ -792,8 +793,8 @@ export default function LanzaroteItinerary() {
                   Alternative disponibili
                 </div>
                 {[
-                  ["Degustazione El Grifo (vs Vega de Yuco)", "+€52 coppia"],
-                  ["Tour Timanfaya + Jameos + Cueva (Tour 3)", "+€84 coppia"],
+                  ["Snorkeling guidato a Papagayo (opz.)", "+€100 coppia"],
+                  ["Kart a San Bartolomé (opz.)", "+€84 coppia"],
                   ["Parcheggio Bari (vs taxi €56)", "−€16 coppia"],
                 ].map(([label, diff], i) => (
                   <div key={i} style={{

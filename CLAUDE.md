@@ -13,6 +13,8 @@ Evolutive funzionali completate:
 - **Itinerario visuale su mappa** (tab "Mappa", Leaflet) — componente `DayMap` + tab Mappa con selettore giorno. Coordinate (`stops`) presenti per **tutti gli 8 giorni**. Vedi sezione "Mappa".
 - **Spunta attività completate** — ogni attività dell'itinerario è cliccabile (spunta circolare a sinistra, o clic sull'intera riga) per marcarla/smarcarla come completata: testo barrato + riga sbiadita. Quando **tutte** le attività di un giorno sono completate, la card del giorno si sbiadisce (+ piccolo ✓ nell'accent del giorno). Niente contatori. Stato persistito in `localStorage` (chiave `doneItems`, array di chiavi `${giorno}-${indice}`). Vedi sezione "Spunta attività".
 
+Contenuti itinerario allineati a `Lanzorote26.md` (tour confermati giugno 2026): **G2** relax/spiagge alle calette di Papagayo, **G4** La Graciosa (€77/pers, traghetto incluso) + Caletón Blanco, **G5** Timanfaya (8:00–13:00) + La Geria, **G7** buggy a Costa Teguise + Arrecife + degustazione al tramonto (Finca Testeina). Rimossi snorkeling guidato e kart (restano come extra opzionali nel breakdown budget). Budget totale stimato: **€634,66 / coppia**.
+
 ## Stack
 
 - **Vite 5** + **React 18** (JS, no TypeScript)
