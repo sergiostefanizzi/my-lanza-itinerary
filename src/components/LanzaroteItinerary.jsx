@@ -63,7 +63,7 @@ const days = [
     ]
   },
   {
-    day: 4, date: "Dom 21 Giugno", title: "La Graciosa", accent: "#e8a86d",
+    day: 4, date: "Dom 21 Giugno", title: "La Graciosa e l'estremo Nord", accent: "#e8a86d",
     subtitle: "L'ultimo paradiso vergine d'Europa",
     icon: "🏝️",
     stops: [
@@ -72,6 +72,7 @@ const days = [
       { label: "Playa de las Conchas", coords: [29.2685, -13.5170] },
       { label: "Playa Bermeja", coords: [29.2640, -13.5230] },
       { label: "Pranzo: Teleclub · Caleta de Sebo", coords: [29.2305, -13.5040] },
+      { label: "Mirador del Río", coords: [29.2120, -13.4790] },
       { label: "Caletón Blanco (al rientro)", coords: [29.2110, -13.4670] },
     ],
     items: [
@@ -79,25 +80,26 @@ const days = [
       { type: "vista", icon: "🏖️", text: "Playa de las Conchas – sabbia dorata e vulcano Bermeja" },
       { type: "vista", icon: "🌋", text: "Playa Bermeja – la cartolina surrealista" },
       { type: "cibo", icon: "🍽️", text: "Pranzo a Caleta de Sebo: Teleclub" },
+      { type: "vista", icon: "👁️", text: "Mirador del Río – panorama su La Graciosa dalla Scogliera" },
       { type: "vista", icon: "🏝️", text: "Caletón Blanco – lava nera e acqua smeraldo (al rientro)" },
     ]
   },
   {
-    day: 5, date: "Lun 22 Giugno", title: "Fuoco e Lava", accent: "#e05252",
-    subtitle: "Timanfaya, lava e vigneti",
+    day: 5, date: "Lun 22 Giugno", title: "Timanfaya e il Sud vulcanico", accent: "#e05252",
+    subtitle: "Marte è a Lanzarote",
     icon: "🔥",
     stops: [
       { label: "Parco di Timanfaya · El Diablo", coords: [28.9956, -13.7555] },
-      { label: "La Geria (vigneti)", coords: [28.9760, -13.7250] },
-      { label: "Bodega El Grifo · museo del vino", coords: [28.9760, -13.6770] },
-      { label: "Casa Museo del Campesino", coords: [29.0010, -13.6420] },
+      { label: "Las Grietas", coords: [28.9850, -13.7090] },
+      { label: "El Golfo · Charco de los Clicos", coords: [28.9603, -13.8285] },
+      { label: "Salinas e Playa di Janubio", coords: [28.9347, -13.8200] },
     ],
     items: [
       { type: "attività", icon: "🌋", text: "Tour Parco Nazionale di Timanfaya (8:00–13:00)", note: "€57 / persona" },
-      { type: "vista", icon: "🍇", text: "La Geria – i vigneti nei crateri vulcanici" },
-      { type: "vista", icon: "🍷", text: "Bodega El Grifo – la bodega più antica delle Canarie" },
-      { type: "vista", icon: "🏡", text: "Casa Museo del Campesino" },
-      { type: "cibo", icon: "🍽️", text: "Pranzo: El Diablo (nel parco) · Cena: La Bodega de Santiago" },
+      { type: "vista", icon: "🪨", text: "Las Grietas" },
+      { type: "vista", icon: "🟢", text: "El Golfo e Charco de los Clicos – la laguna smeraldo" },
+      { type: "vista", icon: "⬛", text: "Salinas e Playa di Janubio – sabbia nera e onde selvagge" },
+      { type: "cibo", icon: "🍽️", text: "Pranzo: El Diablo (nel parco) · Cena: Mirador de las Salinas" },
     ]
   },
   {
@@ -105,19 +107,18 @@ const days = [
     subtitle: "Arte, architettura e panorami senza fine",
     icon: "🎨",
     stops: [
-      { label: "Las Grietas", coords: [28.9850, -13.7090] },
+      { label: "Casa Museo del Campesino", coords: [29.0010, -13.6420] },
       { label: "Fundación César Manrique · Tahíche", coords: [29.0470, -13.5640] },
       { label: "Lagomar Museo · Nazaret", coords: [29.0530, -13.5560] },
       { label: "Teguise", coords: [29.0600, -13.5610] },
       { label: "Caleta de Famara", coords: [29.1150, -13.5640] },
-      { label: "Mirador del Río", coords: [29.2120, -13.4790] },
     ],
     items: [
+      { type: "vista", icon: "🏡", text: "Casa Museo del Campesino" },
       { type: "vista", icon: "🎨", text: "Fundación César Manrique" },
       { type: "vista", icon: "🏛️", text: "Lagomar Museo" },
       { type: "vista", icon: "🏘️", text: "Teguise – l'antica capitale" },
-      { type: "vista", icon: "🪨", text: "Las Grietas" },
-      { type: "vista", icon: "🌊", text: "Caleta de Famara e Mirador del Rio" },
+      { type: "vista", icon: "🌊", text: "Caleta de Famara – onde, surf e la Scogliera" },
       { type: "cibo", icon: "🍽️", text: "Cena: La Tabla o Barlovento" },
     ]
   },
@@ -129,11 +130,13 @@ const days = [
       { label: "Buggy Tour · Costa Teguise (DISA)", coords: [29.0005, -13.4995] },
       { label: "Arrecife · Charco de San Ginés", coords: [28.9630, -13.5470] },
       { label: "Islote de la Fermina · Arrecife", coords: [28.9620, -13.5340] },
+      { label: "La Geria (vigneti)", coords: [28.9760, -13.7250] },
       { label: "Degustazione: Finca Testeina · La Geria", coords: [28.9850, -13.6800] },
     ],
     items: [
       { type: "attività", icon: "🚙", text: "Buggy Tour (9:30–11:30)", note: "€130 / coppia · ritrovo Costa Teguise" },
       { type: "vista", icon: "🏛️", text: "Arrecife: Charco de San Ginés e Islote de la Fermina" },
+      { type: "vista", icon: "🍇", text: "La Geria – i vigneti nei crateri vulcanici" },
       { type: "attività", icon: "🍷", text: "Degustazione al tramonto – Finca Testeina (18:30–20:00)", note: "€26 / persona · vino e cioccolato" },
       { type: "cibo", icon: "🍽️", text: "Cena d'addio: Meneo o Casa Tino" },
     ]
