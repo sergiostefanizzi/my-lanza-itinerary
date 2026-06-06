@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect, useEffect } from "react";
 import DayMap from "./DayMap.jsx";
 
 // Base del viaggio (alloggio): punto di partenza/ritorno delle giornate.
@@ -189,6 +189,17 @@ function getInitialTheme() {
   return "dark";
 }
 
+// Stato "attività completate": persistito in localStorage (solo questo dispositivo).
+// Ogni attività è identificata da `${giorno}-${indice}`.
+const DONE_KEY = "doneItems";
+function getInitialDone() {
+  try {
+    const raw = localStorage.getItem(DONE_KEY);
+    if (raw) return new Set(JSON.parse(raw));
+  } catch (e) { /* localStorage non disponibile / JSON invalido */ }
+  return new Set();
+}
+
 const firstMapDay = days.find(d => d.stops)?.day ?? 1;
 
 export default function LanzaroteItinerary() {
@@ -196,11 +207,25 @@ export default function LanzaroteItinerary() {
   const [tab, setTab] = useState("itinerario");
   const [theme, setTheme] = useState(getInitialTheme);
   const [mapDay, setMapDay] = useState(firstMapDay);
+  const [done, setDone] = useState(getInitialDone);
 
   useLayoutEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     try { localStorage.setItem("theme", theme); } catch (e) { /* no-op */ }
   }, [theme]);
+
+  useEffect(() => {
+    try { localStorage.setItem(DONE_KEY, JSON.stringify([...done])); } catch (e) { /* no-op */ }
+  }, [done]);
+
+  function toggleDone(key) {
+    setDone(prev => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
 
   const total = budget.reduce((s, b) => s + b.amount, 0);
 
@@ -338,10 +363,25 @@ export default function LanzaroteItinerary() {
           border: 1px solid rgba(var(--surface-rgb),.06);
           background: rgba(var(--surface-rgb),.02);
           overflow: hidden;
-          transition: border-color .25s;
+          transition: border-color .25s, opacity .4s ease, filter .4s ease;
         }
         .day-card:hover { border-color: rgba(var(--surface-rgb),.11); }
         .day-card.open { background: rgba(var(--surface-rgb),.03); }
+
+        /* Giorno interamente completato: card sbiadita */
+        .day-card.completed { opacity: .5; filter: saturate(.55); }
+        .day-card.completed:hover { opacity: .72; }
+        .day-card.completed.open { opacity: .9; filter: saturate(.8); }
+
+        .day-done-check {
+          font-size: 15px; line-height: 1; flex-shrink: 0;
+          opacity: .9; animation: tickpop .3s ease;
+        }
+        @keyframes tickpop {
+          0% { transform: scale(0); opacity: 0; }
+          60% { transform: scale(1.25); }
+          100% { transform: scale(1); opacity: .9; }
+        }
 
         .day-head {
           display: flex; align-items: center; gap: 18px;
@@ -400,10 +440,44 @@ export default function LanzaroteItinerary() {
           display: flex; align-items: flex-start; gap: 13px;
           padding: 11px 15px; border-radius: 8px;
           background: var(--item-bg);
+          cursor: pointer;
+          transition: opacity .35s ease, background .2s;
         }
+        .item:hover { background: rgba(var(--surface-rgb),.05); }
+        .item:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+        .item.done { opacity: .45; }
+
+        /* Spunta circolare */
+        .item-check {
+          width: 21px; height: 21px; border-radius: 50%; flex-shrink: 0;
+          margin-top: 1px;
+          display: flex; align-items: center; justify-content: center;
+          border: 1.5px solid rgba(var(--text-rgb),.28);
+          color: #fff; font-size: 12px; line-height: 1;
+          background: transparent;
+          transition: background .25s, border-color .25s, transform .2s;
+        }
+        .item:hover .item-check { transform: scale(1.12); border-color: rgba(var(--text-rgb),.5); }
+        .item.done .item-check {
+          background: var(--accent); border-color: var(--accent);
+        }
+        .item-check-tick {
+          transform: scale(0); transition: transform .25s cubic-bezier(.34,1.56,.64,1);
+        }
+        .item.done .item-check-tick { transform: scale(1); }
+
         .item-ico { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
         .item-body { flex: 1; min-width: 0; }
-        .item-txt { font-size: 13.5px; line-height: 1.45; color: rgba(var(--text-rgb),.82); }
+        .item-txt {
+          font-size: 13.5px; line-height: 1.45; color: rgba(var(--text-rgb),.82);
+          display: inline;
+          background-image: linear-gradient(currentColor, currentColor);
+          background-position: 0 60%;
+          background-repeat: no-repeat;
+          background-size: 0% 1px;
+          transition: background-size .35s ease;
+        }
+        .item.done .item-txt { background-size: 100% 1px; }
         .item-note { font-size: 11px; margin-top: 3px; color: var(--gold); }
         .item-chip {
           font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase;
@@ -595,10 +669,11 @@ export default function LanzaroteItinerary() {
               <div className="timeline">
                 {days.map(d => {
                   const isOpen = openDay === d.day;
+                  const dayDone = d.items.length > 0 && d.items.every((_, i) => done.has(`${d.day}-${i}`));
                   return (
                     <div
                       key={d.day}
-                      className={`day-card ${isOpen ? "open" : ""}`}
+                      className={`day-card ${isOpen ? "open" : ""} ${dayDone ? "completed" : ""}`}
                       style={{ borderColor: isOpen ? `${d.accent}40` : undefined }}
                     >
                       <div className="day-head" onClick={() => setOpenDay(isOpen ? null : d.day)}>
@@ -624,30 +699,53 @@ export default function LanzaroteItinerary() {
                           <div className="day-sub">{d.subtitle}</div>
                         </div>
 
-                        {d.badge && <div className="badge">{d.badge}</div>}
+                        {d.badge && !dayDone && <div className="badge">{d.badge}</div>}
+                        {dayDone && <div className="day-done-check" style={{ color: d.accent }}>✓</div>}
                         <div className="chevron">▼</div>
                       </div>
 
                       <div className="day-body">
                         <div className="day-items">
-                          {d.items.map((item, i) => (
-                            <div key={i} className="item">
-                              <div className="item-ico">{item.icon}</div>
-                              <div className="item-body">
-                                <div className="item-txt">{item.text}</div>
-                                {item.note && <div className="item-note">{item.note}</div>}
-                              </div>
+                          {d.items.map((item, i) => {
+                            const key = `${d.day}-${i}`;
+                            const isDone = done.has(key);
+                            return (
                               <div
-                                className="item-chip"
-                                style={{
-                                  background: `${typeColors[item.type]}1e`,
-                                  color: typeColors[item.type],
+                                key={i}
+                                className={`item ${isDone ? "done" : ""}`}
+                                style={{ "--accent": d.accent }}
+                                onClick={() => toggleDone(key)}
+                                role="button"
+                                tabIndex={0}
+                                aria-pressed={isDone}
+                                aria-label={`${isDone ? "Segna come da fare" : "Segna come completata"}: ${item.text}`}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter" || e.key === " ") {
+                                    e.preventDefault();
+                                    toggleDone(key);
+                                  }
                                 }}
                               >
-                                {typeLabels[item.type]}
+                                <div className="item-check">
+                                  <span className="item-check-tick">✓</span>
+                                </div>
+                                <div className="item-ico">{item.icon}</div>
+                                <div className="item-body">
+                                  <div className="item-txt">{item.text}</div>
+                                  {item.note && <div className="item-note">{item.note}</div>}
+                                </div>
+                                <div
+                                  className="item-chip"
+                                  style={{
+                                    background: `${typeColors[item.type]}1e`,
+                                    color: typeColors[item.type],
+                                  }}
+                                >
+                                  {typeLabels[item.type]}
+                                </div>
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </div>
                     </div>

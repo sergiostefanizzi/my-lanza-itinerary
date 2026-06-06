@@ -11,6 +11,7 @@ Milestone di scaffolding completate: **M0–M4** (CLAUDE.md, scaffolding Vite, m
 Evolutive funzionali completate:
 - **Tema scuro/chiaro** — toggle sole/luna fisso in alto a destra. Tema iniziale: `localStorage` → altrimenti `prefers-color-scheme` → fallback scuro. La scelta è persistita in `localStorage` (chiave `theme`).
 - **Itinerario visuale su mappa** (tab "Mappa", Leaflet) — componente `DayMap` + tab Mappa con selettore giorno. Coordinate (`stops`) presenti per **tutti gli 8 giorni**. Vedi sezione "Mappa".
+- **Spunta attività completate** — ogni attività dell'itinerario è cliccabile (spunta circolare a sinistra, o clic sull'intera riga) per marcarla/smarcarla come completata: testo barrato + riga sbiadita. Quando **tutte** le attività di un giorno sono completate, la card del giorno si sbiadisce (+ piccolo ✓ nell'accent del giorno). Niente contatori. Stato persistito in `localStorage` (chiave `doneItems`, array di chiavi `${giorno}-${indice}`). Vedi sezione "Spunta attività".
 
 ## Stack
 
@@ -21,7 +22,7 @@ Evolutive funzionali completate:
 
 ## File chiave
 
-- **`src/components/LanzaroteItinerary.jsx`** — componente React unico. Self-contained: `useState` per accordion/tab/tema, zero dipendenze UI esterne, stili interamente in un blocco `<style>{...}</style>` inline (no Tailwind, no shadcn/ui, no CSS esterno). Dati hardcoded nelle costanti `days[]`, `budget[]`, `typeColors`, `typeLabels`. Il tema è gestito via CSS variables (vedi sezione "Theming").
+- **`src/components/LanzaroteItinerary.jsx`** — componente React unico. Self-contained: `useState` per accordion/tab/tema/mappa/spunte (`done`), zero dipendenze UI esterne, stili interamente in un blocco `<style>{...}</style>` inline (no Tailwind, no shadcn/ui, no CSS esterno). Dati hardcoded nelle costanti `days[]`, `budget[]`, `typeColors`, `typeLabels`. Il tema è gestito via CSS variables (vedi sezione "Theming"). Lo stato delle attività completate è in `localStorage` (vedi sezione "Spunta attività").
 - **`src/components/DayMap.jsx`** — mappa Leaflet di un singolo giorno: tile CARTO (chiaro/scuro in base al tema), polyline del percorso nell'accent del giorno, segnaposto numerati (`L.divIcon`, niente immagini), marker della base (alloggio). Props: `day`, `base`, `theme`.
 - **`src/App.jsx`** — wrapper minimale che renderizza `<LanzaroteItinerary />`. Aggiungere qui eventuali provider/router globali in futuro.
 - **`src/main.jsx`** — entry point: `createRoot` + `<StrictMode>` + import di `leaflet/dist/leaflet.css` e `./index.css`.
@@ -77,6 +78,16 @@ L'ordine di `stops` definisce il percorso (polyline). I giorni **senza** `stops`
 **Tile / tema**: `DayMap` sceglie i tile CARTO `light_all` o `dark_all` in base alla prop `theme`. `MapContainer` ha `key={day-theme}` per rimontare al cambio giorno/tema. I marker sono `L.divIcon` stilizzati via CSS (`.daymap-pin`, `.daymap-home`) — nessuna immagine marker di Leaflet, così si evita il problema dei path icona con i bundler.
 
 **Coordinate**: assegnate manualmente (approssimate sui luoghi reali), non c'è geocoding. `Lanzorote26.md` è il riferimento per i nomi dei luoghi.
+
+## Spunta attività (completamento)
+
+Nella tab "Itinerario" ogni voce di `days[].items` è marcabile come **completata** (clic sulla spunta circolare a sinistra **o** sull'intera riga; ri-clic per smarcare). Tastiera: l'item è `role="button"` / `tabIndex=0`, attivabile con `Enter`/`Spazio`.
+
+**Modello dati**: lo stato è un `Set` di chiavi `${giorno}-${indice}` (es. `"2-0"`), tenuto nello state React `done`. L'identità di un'attività dipende quindi dalla sua **posizione (indice) in `items`**: riordinare/inserire voci in `items` rimescola le spunte già salvate (vincolo accettato, dati hardcoded).
+
+**Persistenza**: `localStorage`, chiave `doneItems` (array serializzato del Set). È locale al singolo dispositivo/browser — **non** è condivisa tra utenti né tra device (scelta esplicita: niente backend/DB). `getInitialDone()` la rilegge al mount; un `useEffect` la riscrive a ogni cambio.
+
+**UI**: attività completata → `.item.done` (testo barrato via `background-size` animato + opacità `.45`); la spunta `.item-check` si riempie con l'accent del giorno (passato via CSS var inline `--accent`). Quando **tutte** le voci di un giorno sono done → `.day-card.completed` (card sbiadita: `opacity`/`saturate` ridotti, attenuati su hover e da aperta) + `.day-done-check` (✓ nell'accent vicino al chevron, che sostituisce il `badge` se presente). **Niente contatori** per scelta esplicita.
 
 ## Deploy
 
