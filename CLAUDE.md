@@ -62,6 +62,12 @@ Variabili chiave: `--bg`, `--title`, `--title-em`, `--gold`, `--gold-rgb`, `--te
 
 **Vincoli per future modifiche ai colori**: non reintrodurre colori hardcoded nelle regole CSS o negli stili inline JSX dipendenti dal tema — usare sempre le variabili. Restano hardcoded (uguali nei due temi) solo i colori "accent" per-giorno (`days[].accent`), i `typeColors` e i colori semantici +/- del budget (`#e05252` / `#7cba6c`).
 
+## Responsive (smartphone in verticale)
+
+Il layout base è tarato su `.wrap { max-width: 680px }` e va bene così su **desktop e tablet** (es. iPad portrait, 768px). Per lo **smartphone in verticale** c'è un'unica media query `@media (max-width: 560px)` in fondo al blocco `<style>` inline (sopra la chiusura `` `}</style> ``). Breakpoint scelto a **560px**: sotto i telefoni più larghi in portrait (~430px) e sopra l'iPad portrait (768px), così tablet/desktop restano intatti.
+
+Cosa adatta la media query (solo dimensioni/spaziature, nessun colore o ridisegno): padding di `.wrap`/header/`.day-head`/`.day-items`/`.item`, dimensioni di `.big-title`/`.year`/`.stat-val`/`.day-ico`/`.day-num`/`.day-ttl`, tab a larghezza piena (`.tab-btn { flex: 1 }`), `.badge` che va a capo con `max-width`, mappa più bassa (`.day-map-wrap` 360px) e budget compatto. **Scelta chiave**: sul telefono la chip del tipo (`.item-chip`) è `display: none` (ridondante con la legenda in alto e l'icona della voce), per restituire larghezza al testo della voce. Se in futuro si aggiungono elementi alle righe, verificarne il comportamento entro questa media query.
+
 ## Mappa (itinerario visuale)
 
 Tab "Mappa" con selettore del giorno (1–8) + `DayMap` per il giorno selezionato.
