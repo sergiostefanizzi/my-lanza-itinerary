@@ -60,13 +60,23 @@ const days = [
       { label: "Piscine naturali di Punta Mujeres", coords: [29.1490, -13.4490] },
     ],
     items: [
-      { type: "vista", icon: "🌵", text: "Jardín de Cactus", time: "10:00", cost: "cact", price: "€9", note: "Apre 10:00 · ultimo ingresso 16:30" },
-      { type: "vista", icon: "🕳️", text: "Cueva de los Verdes – tubo lavico da 6 km", time: "11:45", cost: "cact", price: "€17", note: "Visita guidata ~50 min · prenotazione online · chiude 16:15" },
+      { type: "vista", icon: "🌵", text: "Jardín de Cactus", time: "10:00", cost: "cact", price: "€9", note: "Apre 10:00 · ultimo ingresso 16:30",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Jard%C3%ADn_de_Cactus-pjt.jpg/1280px-Jard%C3%ADn_de_Cactus-pjt.jpg",
+        desc: "L'ultima grande opera di César Manrique (1990): un anfiteatro scavato in una vecchia cava di rofe, con oltre 4.500 cactus di quasi 500 specie da tutto il mondo, vegliato da un mulino restaurato. Si percorrono sentieri a spirale tra geometrie di pietra vulcanica. Perché venirci: è il giardino più scenografico dell'isola, con scorci fotografici a ogni livello. Conta circa 1 ora." },
+      { type: "vista", icon: "🕳️", text: "Cueva de los Verdes – tubo lavico da 6 km", time: "11:45", cost: "cact", price: "€17", note: "Visita guidata ~50 min · prenotazione online · chiude 16:15",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Lanzarote_5_Luc_Viatour.jpg/1280px-Lanzarote_5_Luc_Viatour.jpg",
+        desc: "Un tubo lavico lungo oltre 6 km, formato circa 3.000 anni fa dall'eruzione del vulcano de la Corona; un tratto si visita con guida lungo gallerie illuminate ad arte. In passato serviva da rifugio agli abitanti dalle incursioni dei pirati. Perché venirci: è la grotta più spettacolare di Lanzarote e nasconde una sorpresa ottica finale che non sveliamo. Visita guidata di circa 50 minuti." },
       { type: "cibo", icon: "🍽️", text: "Pranzo: Arrieta (pesce fresco)", time: "13:00", note: "Villaggio di pescatori, accanto ai Jameos" },
-      { type: "vista", icon: "💧", text: "Jameos del Agua", time: "14:15", cost: "cact", price: "€17", note: "Visita ~1–1,5 h · aperto fino alle 18:00" },
+      { type: "vista", icon: "💧", text: "Jameos del Agua", time: "14:15", cost: "cact", price: "€17", note: "Visita ~1–1,5 h · aperto fino alle 18:00",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Jameos_del_Agua_-_Haria_-_Lanzarote_-_Canary_Islands_-_Spain_-_19.jpg/1280px-Jameos_del_Agua_-_Haria_-_Lanzarote_-_Canary_Islands_-_Spain_-_19.jpg",
+        desc: "Grotta vulcanica trasformata da Manrique in uno spazio dove arte e natura si fondono: un lago naturale abitato da minuscoli granchi albini e ciechi (i \"jameitos\"), una piscina turchese tra le palme e un auditorium dall'acustica perfetta ricavato nella roccia. Perché venirci: è il manifesto della filosofia di Manrique, l'opera più iconica dell'isola. Conta 1–1,5 ore." },
       { type: "cibo", icon: "🍽️", text: "Cena: Punta Mujeres (pesce sul mare)", time: "20:00" },
-      { type: "attività", icon: "🛒", text: "Mercado Artesanal de Haría", cost: "free", optional: true, note: "Solo sabato, chiude alle 14:30 · da incastrare in mattinata" },
-      { type: "vista", icon: "🏊", text: "Piscine naturali di Punta Mujeres", cost: "free", optional: true, note: "Nel pomeriggio dopo i Jameos · con la marea" },
+      { type: "attività", icon: "🛒", text: "Mercado Artesanal de Haría", cost: "free", optional: true, note: "Solo sabato, chiude alle 14:30 · da incastrare in mattinata",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Har%C3%ADa_-_Plaza_Leon_Y_Castillo_11_ies.jpg/1280px-Har%C3%ADa_-_Plaza_Leon_Y_Castillo_11_ies.jpg",
+        desc: "Ogni sabato mattina la Plaza de la Constitución di Haría — il paese delle \"mille palme\" — si riempie di banchi di artigianato, prodotti locali, formaggi e musica. Perché venirci: è il mercato più autentico dell'isola, perfetto per assaggi e souvenir fatti a mano in un borgo bianco immerso nei palmeti. Solo il sabato, fino alle 14:30." },
+      { type: "vista", icon: "🏊", text: "Piscine naturali di Punta Mujeres", cost: "free", optional: true, note: "Nel pomeriggio dopo i Jameos · con la marea",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Punta_Mujeres_Lanzarote.jpg/1280px-Punta_Mujeres_Lanzarote.jpg",
+        desc: "Piccolo villaggio di pescatori dalle case bianche e porte verdi, affacciato su una serie di piscine naturali scavate nella lava che la marea riempie due volte al giorno. Perché venirci: è il posto giusto per un bagno tranquillo in acqua di mare protetta, lontano dalla folla, dopo i Jameos. Ingresso libero." },
     ]
   },
   {
@@ -231,6 +241,8 @@ export default function LanzaroteItinerary() {
   const [theme, setTheme] = useState(getInitialTheme);
   const [mapDay, setMapDay] = useState(firstMapDay);
   const [done, setDone] = useState(getInitialDone);
+  // Voce espansa (immagine + descrizione): una sola alla volta (a fisarmonica). Stato effimero, non persistito.
+  const [expandedItem, setExpandedItem] = useState(null);
 
   useLayoutEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -248,6 +260,10 @@ export default function LanzaroteItinerary() {
       else next.add(key);
       return next;
     });
+  }
+
+  function toggleExpand(key) {
+    setExpandedItem(prev => (prev === key ? null : key));
   }
 
   const total = budget.reduce((s, b) => s + b.amount, 0);
@@ -460,15 +476,21 @@ export default function LanzaroteItinerary() {
         }
 
         .item {
-          display: flex; align-items: flex-start; gap: 13px;
-          padding: 11px 15px; border-radius: 8px;
+          border-radius: 8px;
           background: var(--item-bg);
-          cursor: pointer;
+          overflow: hidden;
           transition: opacity .35s ease, background .2s;
         }
         .item:hover { background: rgba(var(--surface-rgb),.05); }
-        .item:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-        .item.done { opacity: .45; }
+
+        .item-main {
+          display: flex; align-items: flex-start; gap: 13px;
+          padding: 11px 15px; cursor: default;
+        }
+        .item-main.expandable { cursor: pointer; }
+        .item-main:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+        /* Voce completata: si sbiadisce solo la riga, il pannello dettagli resta leggibile */
+        .item.done .item-main { opacity: .45; }
 
         /* Sezione opzionali */
         .opt-divider {
@@ -489,15 +511,19 @@ export default function LanzaroteItinerary() {
 
         /* Spunta circolare */
         .item-check {
+          position: relative;
           width: 21px; height: 21px; border-radius: 50%; flex-shrink: 0;
-          margin-top: 1px;
+          margin-top: 1px; padding: 0; appearance: none;
           display: flex; align-items: center; justify-content: center;
           border: 1.5px solid rgba(var(--text-rgb),.28);
           color: #fff; font-size: 12px; line-height: 1;
-          background: transparent;
+          background: transparent; cursor: pointer;
           transition: background .25s, border-color .25s, transform .2s;
         }
-        .item:hover .item-check { transform: scale(1.12); border-color: rgba(var(--text-rgb),.5); }
+        /* Area di tocco allargata (~38px) senza alterare il disegno del cerchio */
+        .item-check::after { content: ""; position: absolute; inset: -9px; }
+        .item-check:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+        .item-main:hover .item-check { transform: scale(1.12); border-color: rgba(var(--text-rgb),.5); }
         .item.done .item-check {
           background: var(--accent); border-color: var(--accent);
         }
@@ -540,6 +566,27 @@ export default function LanzaroteItinerary() {
           font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase;
           padding: 2px 8px; border-radius: 4px; flex-shrink: 0;
           align-self: flex-start; margin-top: 3px; white-space: nowrap;
+        }
+
+        /* Triangolino di espansione (come i giorni) + pannello dettagli */
+        .item-chevron {
+          align-self: center; flex-shrink: 0; margin-left: 2px;
+          color: rgba(var(--text-rgb),.3); font-size: 9px;
+          transition: transform .3s;
+        }
+        .item-main.open .item-chevron { transform: rotate(180deg); }
+
+        .item-detail { max-height: 0; overflow: hidden; transition: max-height .45s ease; }
+        .item-detail.open { max-height: 640px; }
+        .item-detail-inner { padding: 2px 15px 15px; }
+        .item-img {
+          width: 100%; height: 190px; object-fit: cover; display: block;
+          border-radius: 8px; background: rgba(var(--surface-rgb),.05);
+          border: 1px solid rgba(var(--surface-rgb),.06);
+        }
+        .item-desc {
+          margin-top: 11px; font-size: 13px; line-height: 1.62;
+          color: rgba(var(--text-rgb),.64);
         }
 
         /* Legend */
@@ -692,13 +739,15 @@ export default function LanzaroteItinerary() {
 
           /* Voci itinerario: più spazio al testo, chip-tipo nascosta (ridondante con legenda + icona) */
           .day-items { padding: 12px 12px 18px; gap: 8px; }
-          .item { padding: 10px 11px; gap: 9px; }
+          .item-main { padding: 10px 11px; gap: 9px; }
           .item-check { width: 20px; height: 20px; }
           .item-time { min-width: 36px; font-size: 14px; }
           .item-ico { font-size: 16px; }
           .item-txt { font-size: 13px; }
           .item-note { font-size: 10.5px; }
           .item-chip { display: none; }
+          .item-detail-inner { padding: 2px 11px 14px; }
+          .item-img { height: 168px; }
 
           /* Mappa */
           .map-head-ttl { font-size: 26px; }
@@ -787,48 +836,74 @@ export default function LanzaroteItinerary() {
                   const renderItem = ({ item, i }) => {
                     const key = `${d.day}-${i}`;
                     const isDone = done.has(key);
+                    // Espandibile = ha contenuto (immagine/descrizione): per ora solo le voci vista/attività di G3.
+                    const expandable = !!(item.desc || item.image);
+                    const isExpanded = expandedItem === key;
                     return (
                       <div
                         key={i}
                         className={`item ${isDone ? "done" : ""} ${item.optional ? "optional" : ""}`}
                         style={{ "--accent": d.accent }}
-                        onClick={() => toggleDone(key)}
-                        role="button"
-                        tabIndex={0}
-                        aria-pressed={isDone}
-                        aria-label={`${isDone ? "Segna come da fare" : "Segna come completata"}: ${item.text}`}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            e.preventDefault();
-                            toggleDone(key);
-                          }
-                        }}
                       >
-                        <div className="item-check">
-                          <span className="item-check-tick">✓</span>
-                        </div>
-                        {item.time && <div className="item-time">{item.time}</div>}
-                        <div className="item-ico">{item.icon}</div>
-                        <div className="item-body">
-                          <div className="item-txt">{item.text}</div>
-                          {item.note && <div className="item-note">{item.note}</div>}
-                          {item.cost && (
-                            <div className="item-tags">
-                              {item.cost === "cact" && <span className="cost-tag cost-cact">🎟️ CACT{item.price ? ` · ${item.price} a persona` : ""}</span>}
-                              {item.cost === "paid" && <span className="cost-tag cost-paid">{item.price ? `${item.price} a persona` : "€ a pagamento"}</span>}
-                              {item.cost === "free" && <span className="cost-tag cost-free">Gratis</span>}
-                            </div>
-                          )}
-                        </div>
                         <div
-                          className="item-chip"
-                          style={{
-                            background: `${typeColors[item.type]}1e`,
-                            color: typeColors[item.type],
-                          }}
+                          className={`item-main ${expandable ? "expandable" : ""} ${isExpanded ? "open" : ""}`}
+                          onClick={expandable ? () => toggleExpand(key) : undefined}
+                          role={expandable ? "button" : undefined}
+                          tabIndex={expandable ? 0 : undefined}
+                          aria-expanded={expandable ? isExpanded : undefined}
+                          aria-label={expandable ? `${isExpanded ? "Nascondi" : "Mostra"} i dettagli: ${item.text}` : undefined}
+                          onKeyDown={expandable ? (e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              toggleExpand(key);
+                            }
+                          } : undefined}
                         >
-                          {typeLabels[item.type]}
+                          <button
+                            type="button"
+                            className="item-check"
+                            onClick={(e) => { e.stopPropagation(); toggleDone(key); }}
+                            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") e.stopPropagation(); }}
+                            aria-pressed={isDone}
+                            aria-label={`${isDone ? "Segna come da fare" : "Segna come completata"}: ${item.text}`}
+                          >
+                            <span className="item-check-tick">✓</span>
+                          </button>
+                          {item.time && <div className="item-time">{item.time}</div>}
+                          <div className="item-ico">{item.icon}</div>
+                          <div className="item-body">
+                            <div className="item-txt">{item.text}</div>
+                            {item.note && <div className="item-note">{item.note}</div>}
+                            {item.cost && (
+                              <div className="item-tags">
+                                {item.cost === "cact" && <span className="cost-tag cost-cact">🎟️ CACT{item.price ? ` · ${item.price} a persona` : ""}</span>}
+                                {item.cost === "paid" && <span className="cost-tag cost-paid">{item.price ? `${item.price} a persona` : "€ a pagamento"}</span>}
+                                {item.cost === "free" && <span className="cost-tag cost-free">Gratis</span>}
+                              </div>
+                            )}
+                          </div>
+                          <div
+                            className="item-chip"
+                            style={{
+                              background: `${typeColors[item.type]}1e`,
+                              color: typeColors[item.type],
+                            }}
+                          >
+                            {typeLabels[item.type]}
+                          </div>
+                          {expandable && <div className="item-chevron">▼</div>}
                         </div>
+
+                        {expandable && (
+                          <div className={`item-detail ${isExpanded ? "open" : ""}`}>
+                            <div className="item-detail-inner">
+                              {item.image && (
+                                <img className="item-img" src={item.image} alt={item.text} loading="lazy" />
+                              )}
+                              {item.desc && <p className="item-desc">{item.desc}</p>}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     );
                   };
