@@ -546,6 +546,9 @@ export default function LanzaroteItinerary() {
         /* Animated body */
         .day-body { overflow: hidden; max-height: 0; transition: max-height .4s ease; }
         .day-card.open .day-body { max-height: 900px; }
+        /* Quando una voce del giorno è espansa (immagine+descrizione) il contenuto cresce:
+           alza il limite per non tagliare il pannello (tipico delle opzionali, in fondo alla lista). */
+        .day-card.open.has-expanded .day-body { max-height: 3000px; }
 
         .day-items {
           padding: 4px 22px 22px;
@@ -909,6 +912,8 @@ export default function LanzaroteItinerary() {
                   // Il giorno è "completato" solo quando tutte le voci OBBLIGATORIE sono spuntate.
                   const hasMandatory = d.items.some(it => !it.optional);
                   const dayDone = hasMandatory && d.items.every((it, i) => it.optional || done.has(`${d.day}-${i}`));
+                  // Una voce di questo giorno è espansa? (per alzare il max-height del day-body)
+                  const hasExpanded = expandedItem != null && Number(expandedItem.split("-")[0]) === d.day;
                   const indexed = d.items.map((item, i) => ({ item, i }));
                   const mandatoryItems = indexed.filter(x => !x.item.optional);
                   const optionalItems = indexed.filter(x => x.item.optional);
@@ -989,7 +994,7 @@ export default function LanzaroteItinerary() {
                   return (
                     <div
                       key={d.day}
-                      className={`day-card ${isOpen ? "open" : ""} ${dayDone ? "completed" : ""}`}
+                      className={`day-card ${isOpen ? "open" : ""} ${dayDone ? "completed" : ""} ${hasExpanded ? "has-expanded" : ""}`}
                       style={{ borderColor: isOpen ? `${d.accent}40` : undefined }}
                     >
                       <div className="day-head" onClick={() => setOpenDay(isOpen ? null : d.day)}>
