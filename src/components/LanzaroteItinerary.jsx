@@ -15,11 +15,11 @@ const days = [
       { label: "Cena: Mura · Puerto del Carmen", coords: [28.9170, -13.6635] },
     ],
     items: [
-      { type: "logistica", icon: "🛬", text: "17:00 – Atterraggio a Lanzarote" },
-      { type: "logistica", icon: "🚗", text: "18:00 – Ritiro auto Cicar 500X" },
-      { type: "logistica", icon: "🏠", text: "Check-in Casa Vera, Puerto del Carmen" },
-      { type: "vista", icon: "🌅", text: "Passeggiata sul lungomare di Puerto del Carmen" },
-      { type: "cibo", icon: "🍽️", text: "Cena: Mura o Casa Carlos" },
+      { type: "logistica", icon: "🛬", text: "Atterraggio a Lanzarote" , time: "17:00"},
+      { type: "logistica", icon: "🚗", text: "Ritiro auto Cicar 500X" , time: "18:00"},
+      { type: "logistica", icon: "🏠", text: "Check-in Casa Vera, Puerto del Carmen" , time: "19:00"},
+      { type: "vista", icon: "🌅", text: "Passeggiata sul lungomare di Puerto del Carmen" , time: "20:00"},
+      { type: "cibo", icon: "🍽️", text: "Cena: Mura o Casa Carlos" , time: "21:00"},
     ]
   },
   {
@@ -161,11 +161,11 @@ const days = [
       { label: "Aeroporto di Lanzarote", coords: [28.9455, -13.6052] },
     ],
     items: [
-      { type: "logistica", icon: "🚗", text: "06:00 – Consegna auto Cicar" },
-      { type: "logistica", icon: "✈️", text: "08:30 – Volo Lanzarote → Milano Bergamo" },
-      { type: "logistica", icon: "🛬", text: "13:25 – Arrivo Milano Bergamo" },
-      { type: "logistica", icon: "✈️", text: "17:25 – Volo Bergamo → Bari" },
-      { type: "logistica", icon: "🏠", text: "18:55 – Arrivo Bari" },
+      { type: "logistica", icon: "🚗", text: "Consegna auto Cicar", time: "06:00" },
+      { type: "logistica", icon: "✈️", text: "Volo Lanzarote → Milano Bergamo", time: "08:30" },
+      { type: "logistica", icon: "🛬", text: "Arrivo Milano Bergamo", time: "13:25" },
+      { type: "logistica", icon: "✈️", text: "Volo Bergamo → Bari", time: "17:25" },
+      { type: "logistica", icon: "🏠", text: "Arrivo Bari", time: "18:55" },
     ]
   },
 ];
