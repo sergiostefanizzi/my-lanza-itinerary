@@ -661,6 +661,58 @@ export default function LanzaroteItinerary() {
           border: 2px solid rgba(255,255,255,.7);
           box-shadow: 0 2px 6px rgba(0,0,0,.4);
         }
+
+        /* ── Smartphone in verticale (sotto l'iPad portrait) ── */
+        @media (max-width: 560px) {
+          .wrap { padding: 0 14px 64px; }
+
+          /* Header */
+          .hdr { padding: 38px 0 28px; }
+          .big-title { font-size: clamp(50px, 15vw, 70px); }
+          .year { font-size: clamp(24px, 7vw, 34px); letter-spacing: 7px; }
+          .meta { gap: 22px; margin-top: 24px; padding-top: 22px; }
+          .stat-val { font-size: 26px; }
+
+          /* Tabs: distribuite a larghezza piena */
+          .tabs { margin-bottom: 28px; }
+          .tab-btn { flex: 1; padding: 12px 4px; letter-spacing: 1.6px; font-size: 10px; }
+
+          .legend { gap: 8px 12px; margin-bottom: 18px; }
+
+          /* Intestazione giorno */
+          .day-head { padding: 15px 13px; gap: 11px; }
+          .day-num { font-size: 26px; min-width: 0; }
+          .day-ico { width: 40px; height: 40px; font-size: 19px; border-radius: 10px; }
+          .day-ttl { font-size: 20px; }
+          .day-sub { font-size: 11px; }
+          .badge {
+            white-space: normal; max-width: 86px; text-align: center;
+            font-size: 8.5px; line-height: 1.25; padding: 4px 8px;
+          }
+
+          /* Voci itinerario: più spazio al testo, chip-tipo nascosta (ridondante con legenda + icona) */
+          .day-items { padding: 12px 12px 18px; gap: 8px; }
+          .item { padding: 10px 11px; gap: 9px; }
+          .item-check { width: 20px; height: 20px; }
+          .item-time { min-width: 36px; font-size: 14px; }
+          .item-ico { font-size: 16px; }
+          .item-txt { font-size: 13px; }
+          .item-note { font-size: 10.5px; }
+          .item-chip { display: none; }
+
+          /* Mappa */
+          .map-head-ttl { font-size: 26px; }
+          .day-map-wrap { height: 360px; }
+          .map-stops { gap: 8px 14px; }
+
+          /* Budget */
+          .budget-hdr { padding: 20px; }
+          .budget-title { font-size: 25px; }
+          .budget-row { padding: 12px 18px; font-size: 12.5px; }
+          .budget-amt { font-size: 18px; }
+          .budget-total { padding: 18px; }
+          .total-amt { font-size: 34px; }
+        }
       `}</style>
 
       <div className="app">
