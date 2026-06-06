@@ -36,6 +36,7 @@ const days = [
       { type: "vista", icon: "🏖️", text: "Spiagge di Papagayo: Playa Mujeres, Papagayo, Caleta del Congrio", note: "Ingresso monumento naturale ~€3/auto" },
       { type: "attività", icon: "🤿", text: "Snorkeling in autonomia nelle calette turchesi" },
       { type: "vista", icon: "🧺", text: "Relax e picnic tra le calette protette" },
+      { type: "cibo", icon: "🥪", text: "Pranzo: picnic in spiaggia (a Papagayo non ci sono locali)" },
       { type: "vista", icon: "🌅", text: "Tramonto e passeggiata a Playa Blanca" },
       { type: "cibo", icon: "🍽️", text: "Cena: BePapagayo" },
     ]
@@ -48,14 +49,15 @@ const days = [
     stops: [
       { label: "Jardín de Cactus", coords: [29.0810, -13.4790] },
       { label: "Mercado Artesanal de Haría", coords: [29.1456, -13.5036] },
-      { label: "Cueva de los Verdes", coords: [29.1564, -13.4380] },
       { label: "Jameos del Agua", coords: [29.1577, -13.4322] },
+      { label: "Cueva de los Verdes", coords: [29.1564, -13.4380] },
       { label: "Piscine naturali di Punta Mujeres", coords: [29.1490, -13.4490] },
       { label: "Cena: Kamezi · Costa Teguise", coords: [28.9966, -13.5030] },
     ],
     items: [
-      { type: "attività", icon: "🛒", text: "Mercado Artesanal de Haría", note: "Solo il sabato!" },
       { type: "vista", icon: "🌵", text: "Jardín de Cactus" },
+      { type: "cibo", icon: "🌵", text: "Pranzo: Jardín de Cactus bar" },
+      { type: "attività", icon: "🛒", text: "Mercado Artesanal de Haría", note: "Solo il sabato!" },
       { type: "vista", icon: "💧", text: "Jameos del Agua" },
       { type: "vista", icon: "🕳️", text: "Cueva de las Verdes – tubo lavico da 6 km" },
       { type: "vista", icon: "🏊", text: "Piscine naturali di Punta Mujeres" },
@@ -82,6 +84,7 @@ const days = [
       { type: "cibo", icon: "🍽️", text: "Pranzo a Caleta de Sebo: Teleclub" },
       { type: "vista", icon: "👁️", text: "Mirador del Río – panorama su La Graciosa dalla Scogliera" },
       { type: "vista", icon: "🏝️", text: "Caletón Blanco – lava nera e acqua smeraldo (al rientro)" },
+      { type: "cibo", icon: "🍽️", text: "Cena: Casa Tino (al rientro)" },
     ]
   },
   {
@@ -96,10 +99,11 @@ const days = [
     ],
     items: [
       { type: "attività", icon: "🌋", text: "Tour Parco Nazionale di Timanfaya (8:00–13:00)", note: "€57 / persona" },
+      { type: "cibo", icon: "🍽️", text: "Pranzo: El Diablo (nel parco)" },
       { type: "vista", icon: "🪨", text: "Las Grietas" },
       { type: "vista", icon: "🟢", text: "El Golfo e Charco de los Clicos – la laguna smeraldo" },
       { type: "vista", icon: "⬛", text: "Salinas e Playa di Janubio – sabbia nera e onde selvagge" },
-      { type: "cibo", icon: "🍽️", text: "Pranzo: El Diablo (nel parco) · Cena: Mirador de las Salinas" },
+      { type: "cibo", icon: "🍽️", text: "Cena: Mirador de las Salinas" },
     ]
   },
   {
@@ -117,9 +121,10 @@ const days = [
       { type: "vista", icon: "🏡", text: "Casa Museo del Campesino" },
       { type: "vista", icon: "🎨", text: "Fundación César Manrique" },
       { type: "vista", icon: "🏛️", text: "Lagomar Museo" },
+      { type: "cibo", icon: "🍽️", text: "Pranzo: La Tabla (Teguise)" },
       { type: "vista", icon: "🏘️", text: "Teguise – l'antica capitale" },
       { type: "vista", icon: "🌊", text: "Caleta de Famara – onde, surf e la Scogliera" },
-      { type: "cibo", icon: "🍽️", text: "Cena: La Tabla o Barlovento" },
+      { type: "cibo", icon: "🍽️", text: "Cena: Barlovento" },
     ]
   },
   {
@@ -136,9 +141,10 @@ const days = [
     items: [
       { type: "attività", icon: "🚙", text: "Buggy Tour (9:30–11:30)", note: "€130 / coppia · ritrovo Costa Teguise" },
       { type: "vista", icon: "🏛️", text: "Arrecife: Charco de San Ginés e Islote de la Fermina" },
+      { type: "cibo", icon: "🍣", text: "Pranzo: Oppa (Arrecife)" },
       { type: "vista", icon: "🍇", text: "La Geria – i vigneti nei crateri vulcanici" },
       { type: "attività", icon: "🍷", text: "Degustazione al tramonto – Finca Testeina (18:30–20:00)", note: "€26 / persona · vino e cioccolato" },
-      { type: "cibo", icon: "🍽️", text: "Cena d'addio: Meneo o Casa Tino" },
+      { type: "cibo", icon: "🍽️", text: "Cena d'addio: Meneo" },
     ]
   },
   {
@@ -788,27 +794,6 @@ export default function LanzaroteItinerary() {
                 💡 Le cifre per attività (Timanfaya, La Graciosa, degustazione) sono calcolate per 2 persone.
                 Il budget reale varierà in base a pasti, ingressi singoli, souvenir e scelte finali sulle attività.
                 Considera circa <strong style={{ color: "rgba(var(--text-rgb),.75)" }}>€40–70 al giorno a persona</strong> per pasti e spese varie.
-              </div>
-
-              {/* Mini cost breakdown per activity */}
-              <div style={{ marginTop: 20 }}>
-                <div style={{ fontSize: 10, letterSpacing: 3, textTransform: "uppercase", color: "rgba(var(--text-rgb),.3)", marginBottom: 14 }}>
-                  Alternative disponibili
-                </div>
-                {[
-                  ["Snorkeling guidato a Papagayo (opz.)", "+€100 coppia"],
-                  ["Kart a San Bartolomé (opz.)", "+€84 coppia"],
-                  ["Parcheggio Bari (vs taxi €56)", "−€16 coppia"],
-                ].map(([label, diff], i) => (
-                  <div key={i} style={{
-                    display: "flex", justifyContent: "space-between",
-                    padding: "11px 0", borderBottom: "1px solid rgba(var(--surface-rgb),.04)",
-                    fontSize: 13,
-                  }}>
-                    <span style={{ color: "rgba(var(--text-rgb),.5)" }}>{label}</span>
-                    <span style={{ color: diff.startsWith("+") ? "#e05252" : "#7cba6c", fontFamily: "Cormorant Garamond, serif", fontSize: 17 }}>{diff}</span>
-                  </div>
-                ))}
               </div>
             </>
           )}
