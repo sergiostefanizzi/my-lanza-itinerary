@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect, useEffect } from "react";
+import { useState, useLayoutEffect, useEffect, useRef } from "react";
 import DayMap from "./DayMap.jsx";
 
 // Base del viaggio (alloggio): punto di partenza/ritorno delle giornate.
@@ -323,6 +323,11 @@ export default function LanzaroteItinerary() {
   // Voce espansa (immagine + descrizione): una sola alla volta (a fisarmonica). Stato effimero, non persistito.
   const [expandedItem, setExpandedItem] = useState(null);
 
+  // Riferimenti agli elementi per portare in alto giorno/voce all'apertura.
+  const dayRefs = useRef({});
+  const itemRefs = useRef({});
+  const skipFirstDayScroll = useRef(true);
+
   useLayoutEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     try { localStorage.setItem("theme", theme); } catch (e) { /* no-op */ }
@@ -331,6 +336,27 @@ export default function LanzaroteItinerary() {
   useEffect(() => {
     try { localStorage.setItem(DONE_KEY, JSON.stringify([...done])); } catch (e) { /* no-op */ }
   }, [done]);
+
+  // Porta in alto il giorno appena aperto (dopo che l'animazione apri/chiudi si è assestata, ~400ms).
+  useEffect(() => {
+    if (skipFirstDayScroll.current) { skipFirstDayScroll.current = false; return; } // niente scroll al primo render
+    if (openDay == null) return; // chiusura: non scrollare
+    const id = setTimeout(() => {
+      const el = dayRefs.current[openDay];
+      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 12, behavior: "smooth" });
+    }, 420);
+    return () => clearTimeout(id);
+  }, [openDay]);
+
+  // Porta in alto la voce (tile) appena espansa.
+  useEffect(() => {
+    if (expandedItem == null) return; // chiusura: non scrollare
+    const id = setTimeout(() => {
+      const el = itemRefs.current[expandedItem];
+      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 12, behavior: "smooth" });
+    }, 420);
+    return () => clearTimeout(id);
+  }, [expandedItem]);
 
   function toggleDone(key) {
     setDone(prev => {
@@ -926,6 +952,7 @@ export default function LanzaroteItinerary() {
                     return (
                       <div
                         key={i}
+                        ref={(el) => { itemRefs.current[key] = el; }}
                         className={`item ${isDone ? "done" : ""} ${item.optional ? "optional" : ""}`}
                         style={{ "--accent": d.accent }}
                       >
@@ -994,6 +1021,7 @@ export default function LanzaroteItinerary() {
                   return (
                     <div
                       key={d.day}
+                      ref={(el) => { dayRefs.current[d.day] = el; }}
                       className={`day-card ${isOpen ? "open" : ""} ${dayDone ? "completed" : ""} ${hasExpanded ? "has-expanded" : ""}`}
                       style={{ borderColor: isOpen ? `${d.accent}40` : undefined }}
                     >
