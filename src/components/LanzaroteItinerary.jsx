@@ -28,17 +28,23 @@ const days = [
     icon: "🏖️",
     stops: [
       { label: "Playa Mujeres", coords: [28.8430, -13.7965] },
-      { label: "Playa Papagayo", coords: [28.8360, -13.7900] },
+      { label: "Playa de Papagayo", coords: [28.8360, -13.7900] },
+      { label: "Playa de la Cera", coords: [28.8350, -13.7878] },
       { label: "Caleta del Congrio", coords: [28.8340, -13.7860] },
+      { label: "Playa del Pozo", coords: [28.8332, -13.7838] },
       { label: "Tramonto: Playa Blanca", coords: [28.8617, -13.8300] },
     ],
     items: [
-      { type: "vista", icon: "🏖️", text: "Spiagge di Papagayo: Playa Mujeres, Papagayo, Caleta del Congrio", note: "Ingresso monumento naturale ~€3/auto" },
-      { type: "attività", icon: "🤿", text: "Snorkeling in autonomia nelle calette turchesi" },
-      { type: "vista", icon: "🧺", text: "Relax e picnic tra le calette protette" },
-      { type: "cibo", icon: "🥪", text: "Pranzo: picnic in spiaggia (a Papagayo non ci sono locali)" },
-      { type: "vista", icon: "🌅", text: "Tramonto e passeggiata a Playa Blanca" },
-      { type: "cibo", icon: "🍽️", text: "Cena: BePapagayo" },
+      { type: "vista", icon: "🏖️", text: "Calette di Papagayo — giornata in spiaggia", time: "10:00", cost: "free", note: "Accesso 9:00–19:00 · €3 a veicolo (solo carta) · 5 calette su un sentiero di 1,5 km: spostati liberamente. Uscita entro le 19:00" },
+      { type: "attività", icon: "🤿", text: "Snorkeling in autonomia nelle calette turchesi", time: "11:00" },
+      { type: "cibo", icon: "🥪", text: "Pranzo: picnic in spiaggia (a Papagayo non ci sono locali)", time: "13:30" },
+      { type: "vista", icon: "🌅", text: "Tramonto a Playa Blanca", time: "21:00", note: "A giugno il sole tramonta verso le 21:00" },
+      { type: "cibo", icon: "🍽️", text: "Cena: BePapagayo", time: "21:15", note: "Sul lungomare di Playa Blanca, vista mare" },
+      { type: "vista", icon: "🏖️", text: "Playa Mujeres", optional: true, note: "La più ampia, sabbia dorata · vicino a Playa Blanca" },
+      { type: "vista", icon: "🏖️", text: "Playa de Papagayo", optional: true, note: "La cartolina: cala riparata tra le falesie" },
+      { type: "vista", icon: "🏖️", text: "Playa de la Cera", optional: true, note: "Piccola e tranquilla" },
+      { type: "vista", icon: "🏖️", text: "Caleta del Congrio", optional: true, note: "Appartata (anche naturisti)" },
+      { type: "vista", icon: "🏖️", text: "Playa del Pozo", optional: true, note: "Ampia e di solito meno affollata" },
     ]
   },
   {
@@ -77,13 +83,13 @@ const days = [
       { label: "Caletón Blanco (al rientro)", coords: [29.2110, -13.4670] },
     ],
     items: [
-      { type: "attività", icon: "⛵", text: "Tour Jeep Safari – La Graciosa (traghetto incluso)", note: "€77 / persona · slot 10:30" },
-      { type: "vista", icon: "🏖️", text: "Playa de las Conchas – sabbia dorata e vulcano Bermeja" },
-      { type: "vista", icon: "🌋", text: "Playa Bermeja – la cartolina surrealista" },
-      { type: "cibo", icon: "🍽️", text: "Pranzo a Caleta de Sebo: Teleclub" },
-      { type: "vista", icon: "👁️", text: "Mirador del Río – panorama su La Graciosa dalla Scogliera" },
-      { type: "vista", icon: "🏝️", text: "Caletón Blanco – lava nera e acqua smeraldo (al rientro)" },
-      { type: "cibo", icon: "🍽️", text: "Cena: Casa Tino (al rientro)" },
+      { type: "attività", icon: "⛵", text: "Tour Jeep Safari – La Graciosa", time: "10:30", cost: "paid", price: "€77", note: "Traghetto incluso (25 min) · safari ~1h30 · slot 10:30 da Órzola" },
+      { type: "vista", icon: "🏖️", text: "Playa de las Conchas – sabbia dorata e vulcano Bermeja", time: "11:30" },
+      { type: "vista", icon: "🌋", text: "Playa Bermeja – la cartolina surrealista", time: "12:15" },
+      { type: "cibo", icon: "🍽️", text: "Pranzo a Caleta de Sebo: Teleclub", time: "13:30" },
+      { type: "vista", icon: "👁️", text: "Mirador del Río – panorama su La Graciosa", time: "16:15", cost: "cact", price: "€9", note: "~30 min · chiude 17:00 (ultimo ingresso 16:40) · rientra in tempo dal traghetto" },
+      { type: "cibo", icon: "🍽️", text: "Cena: Casa Tino (al rientro)", time: "20:30" },
+      { type: "vista", icon: "🏝️", text: "Caletón Blanco – lava nera e acqua smeraldo", cost: "free", optional: true, note: "Sosta-bagno tra Órzola e il Mirador, se hai tempo" },
     ]
   },
   {
@@ -97,12 +103,13 @@ const days = [
       { label: "Salinas e Playa di Janubio", coords: [28.9347, -13.8200] },
     ],
     items: [
-      { type: "attività", icon: "🌋", text: "Tour Parco Nazionale di Timanfaya (8:00–13:00)", note: "€57 / persona" },
-      { type: "cibo", icon: "🍽️", text: "Pranzo: El Diablo (nel parco)" },
-      { type: "vista", icon: "🪨", text: "Las Grietas" },
-      { type: "vista", icon: "🟢", text: "El Golfo e Charco de los Clicos – la laguna smeraldo" },
-      { type: "vista", icon: "⬛", text: "Salinas e Playa di Janubio – sabbia nera e onde selvagge" },
-      { type: "cibo", icon: "🍽️", text: "Cena: Mirador de las Salinas" },
+      { type: "attività", icon: "🌋", text: "Tour Parco Nazionale di Timanfaya", time: "08:00", cost: "paid", price: "€57", note: "5 ore (8:00–13:00) · prelievo e rientro a Puerto del Carmen" },
+      { type: "cibo", icon: "🍽️", text: "Pranzo: El Diablo (nel parco)", time: "13:00", note: "Ristorante di Manrique nel parco, grill geotermico" },
+      { type: "vista", icon: "🪨", text: "Las Grietas", time: "14:30", cost: "free", note: "Sosta breve ~30 min" },
+      { type: "vista", icon: "🟢", text: "El Golfo e Charco de los Clicos – la laguna smeraldo", time: "15:30", cost: "free", note: "Passeggiata ~45 min" },
+      { type: "vista", icon: "⬛", text: "Salinas e Playa di Janubio – sabbia nera e onde selvagge", time: "16:30", cost: "free" },
+      { type: "cibo", icon: "🍽️", text: "Cena: Mirador de las Salinas", time: "21:00", note: "Tramonto sulle saline di Janubio" },
+      { type: "cibo", icon: "🍷", text: "Pranzo alternativo: La Bodega de Santiago (Yaiza)", optional: true, note: "In alternativa a El Diablo, sulla strada verso la costa" },
     ]
   },
   {
@@ -117,13 +124,13 @@ const days = [
       { label: "Caleta de Famara", coords: [29.1150, -13.5640] },
     ],
     items: [
-      { type: "vista", icon: "🏡", text: "Casa Museo del Campesino" },
-      { type: "vista", icon: "🎨", text: "Fundación César Manrique" },
-      { type: "vista", icon: "🏛️", text: "Lagomar Museo" },
-      { type: "cibo", icon: "🍽️", text: "Pranzo: La Tabla (Teguise)" },
-      { type: "vista", icon: "🏘️", text: "Teguise – l'antica capitale" },
-      { type: "vista", icon: "🌊", text: "Caleta de Famara – onde, surf e la Scogliera" },
-      { type: "cibo", icon: "🍽️", text: "Cena: Barlovento" },
+      { type: "vista", icon: "🏡", text: "Casa Museo del Campesino", time: "10:00", cost: "free", note: "Centro CACT a ingresso gratuito · 10:00–18:00 · ~30 min" },
+      { type: "vista", icon: "🎨", text: "Fundación César Manrique", time: "11:00", cost: "paid", price: "€10", note: "10:00–17:30 (cassa fino 17:00) · ~1–1,5 h · non CACT" },
+      { type: "vista", icon: "🏛️", text: "Lagomar – Casa Omar Sharif", time: "12:45", cost: "paid", price: "€10", note: "10:00–18:00 · ~45 min · non CACT" },
+      { type: "cibo", icon: "🍽️", text: "Pranzo: La Tabla (Teguise)", time: "13:45" },
+      { type: "vista", icon: "🏘️", text: "Teguise – l'antica capitale", time: "15:30", cost: "free", note: "Passeggiata nel centro storico (il mercato è la domenica) · ~1 h" },
+      { type: "cibo", icon: "🍽️", text: "Cena: Barlovento (Teguise)", time: "21:00" },
+      { type: "vista", icon: "🌊", text: "Caleta de Famara – onde, surf e la Scogliera", cost: "free", optional: true, note: "Spiaggia per il tardo pomeriggio/tramonto, se hai tempo" },
     ]
   },
   {
@@ -138,12 +145,12 @@ const days = [
       { label: "Degustazione: Finca Testeina · La Geria", coords: [28.9850, -13.6800] },
     ],
     items: [
-      { type: "attività", icon: "🚙", text: "Buggy Tour (9:30–11:30)", note: "€130 / coppia · ritrovo Costa Teguise" },
-      { type: "vista", icon: "🏛️", text: "Arrecife: Charco de San Ginés e Islote de la Fermina" },
-      { type: "cibo", icon: "🍣", text: "Pranzo: Oppa (Arrecife)" },
-      { type: "vista", icon: "🍇", text: "La Geria – i vigneti nei crateri vulcanici" },
-      { type: "attività", icon: "🍷", text: "Degustazione al tramonto – Finca Testeina (18:30–20:00)", note: "€26 / persona · vino e cioccolato" },
-      { type: "cibo", icon: "🍽️", text: "Cena d'addio: Meneo" },
+      { type: "attività", icon: "🚙", text: "Buggy Tour", time: "09:30", cost: "paid", price: "€65", note: "9:30–11:30 (~2 h) · €130 / coppia · ritrovo Costa Teguise" },
+      { type: "vista", icon: "🏛️", text: "Arrecife: Charco de San Ginés e Islote de la Fermina", time: "12:00", cost: "free", note: "Passeggiata in città ~1–1,5 h" },
+      { type: "cibo", icon: "🍣", text: "Pranzo: Oppa (Arrecife)", time: "13:30" },
+      { type: "vista", icon: "🍇", text: "La Geria – i vigneti nei crateri vulcanici", time: "15:30", cost: "free", note: "Strada panoramica tra i vigneti" },
+      { type: "attività", icon: "🍷", text: "Degustazione al tramonto – Finca Testeina", time: "18:30", cost: "paid", price: "€26", note: "18:30–20:00 (~1,5 h) · vino e cioccolato" },
+      { type: "cibo", icon: "🍽️", text: "Cena d'addio: Meneo", time: "20:30" },
     ]
   },
   {
@@ -170,6 +177,13 @@ const budget = [
   { label: "Tour Timanfaya (×2)", amount: 114.00 },
   { label: "Buggy Tour (coppia)", amount: 130.00 },
   { label: "Degustazione Finca Testeina (×2)", amount: 52.00 },
+  { label: "Jardín de Cactus · CACT (×2)", amount: 18.00 },
+  { label: "Cueva de los Verdes · CACT (×2)", amount: 34.00 },
+  { label: "Jameos del Agua · CACT (×2)", amount: 34.00 },
+  { label: "Mirador del Río · CACT (×2)", amount: 18.00 },
+  { label: "Fundación César Manrique (×2)", amount: 20.00 },
+  { label: "Lagomar (×2)", amount: 20.00 },
+  { label: "Accesso Papagayo (auto)", amount: 3.00 },
 ];
 
 const typeColors = {
@@ -749,7 +763,7 @@ export default function LanzaroteItinerary() {
                           {item.cost && (
                             <div className="item-tags">
                               {item.cost === "cact" && <span className="cost-tag cost-cact">🎟️ CACT{item.price ? ` · ${item.price} a persona` : ""}</span>}
-                              {item.cost === "paid" && <span className="cost-tag cost-paid">€ a pagamento</span>}
+                              {item.cost === "paid" && <span className="cost-tag cost-paid">{item.price ? `${item.price} a persona` : "€ a pagamento"}</span>}
                               {item.cost === "free" && <span className="cost-tag cost-free">Gratis</span>}
                             </div>
                           )}
@@ -844,9 +858,9 @@ export default function LanzaroteItinerary() {
               </div>
 
               <div className="note-box">
-                💡 Le cifre per attività (Timanfaya, La Graciosa, degustazione) sono calcolate per 2 persone.
-                Il budget reale varierà in base a pasti, ingressi singoli, souvenir e scelte finali sulle attività.
-                Considera circa <strong style={{ color: "rgba(var(--text-rgb),.75)" }}>€40–70 al giorno a persona</strong> per pasti e spese varie.
+                💡 Le cifre per attività e ingressi sono calcolate per 2 persone (ingressi CACT e musei inclusi).
+                Esclusi voli, alloggio e pasti: considera circa <strong style={{ color: "rgba(var(--text-rgb),.75)" }}>€40–70 al giorno a persona</strong> per pasti e spese varie.
+                Prezzi e orari sono indicativi, da riverificare prima del viaggio.
               </div>
             </>
           )}
