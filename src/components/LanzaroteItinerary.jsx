@@ -49,19 +49,18 @@ const days = [
     stops: [
       { label: "Jardín de Cactus", coords: [29.0810, -13.4790] },
       { label: "Mercado Artesanal de Haría", coords: [29.1456, -13.5036] },
-      { label: "Jameos del Agua", coords: [29.1577, -13.4322] },
       { label: "Cueva de los Verdes", coords: [29.1564, -13.4380] },
+      { label: "Jameos del Agua", coords: [29.1577, -13.4322] },
       { label: "Piscine naturali di Punta Mujeres", coords: [29.1490, -13.4490] },
-      { label: "Cena: Kamezi · Costa Teguise", coords: [28.9966, -13.5030] },
     ],
     items: [
-      { type: "vista", icon: "🌵", text: "Jardín de Cactus" },
-      { type: "cibo", icon: "🌵", text: "Pranzo: Jardín de Cactus bar" },
-      { type: "attività", icon: "🛒", text: "Mercado Artesanal de Haría", note: "Solo il sabato!" },
-      { type: "vista", icon: "💧", text: "Jameos del Agua" },
-      { type: "vista", icon: "🕳️", text: "Cueva de las Verdes – tubo lavico da 6 km" },
-      { type: "vista", icon: "🏊", text: "Piscine naturali di Punta Mujeres" },
-      { type: "cibo", icon: "🍽️", text: "Cena: Kamezi" },
+      { type: "vista", icon: "🌵", text: "Jardín de Cactus", time: "10:00", cost: "cact", price: "€9", note: "Apre 10:00 · ultimo ingresso 16:30" },
+      { type: "vista", icon: "🕳️", text: "Cueva de los Verdes – tubo lavico da 6 km", time: "11:45", cost: "cact", price: "€17", note: "Visita guidata ~50 min · prenotazione online · chiude 16:15" },
+      { type: "cibo", icon: "🍽️", text: "Pranzo: Arrieta (pesce fresco)", time: "13:00", note: "Villaggio di pescatori, accanto ai Jameos" },
+      { type: "vista", icon: "💧", text: "Jameos del Agua", time: "14:15", cost: "cact", price: "€17", note: "Visita ~1–1,5 h · aperto fino alle 18:00" },
+      { type: "cibo", icon: "🍽️", text: "Cena: Punta Mujeres (pesce sul mare)", time: "20:00" },
+      { type: "attività", icon: "🛒", text: "Mercado Artesanal de Haría", cost: "free", optional: true, note: "Solo sabato, chiude alle 14:30 · da incastrare in mattinata" },
+      { type: "vista", icon: "🏊", text: "Piscine naturali di Punta Mujeres", cost: "free", optional: true, note: "Nel pomeriggio dopo i Jameos · con la marea" },
     ]
   },
   {
@@ -457,6 +456,23 @@ export default function LanzaroteItinerary() {
         .item:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
         .item.done { opacity: .45; }
 
+        /* Sezione opzionali */
+        .opt-divider {
+          display: flex; align-items: center; gap: 12px;
+          margin: 10px 2px 3px;
+          font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase;
+          color: rgba(var(--text-rgb),.34);
+        }
+        .opt-divider::before, .opt-divider::after {
+          content: ""; flex: 1; height: 1px;
+          background: rgba(var(--surface-rgb),.09);
+        }
+        .item.optional {
+          background: transparent;
+          border: 1px dashed rgba(var(--surface-rgb),.14);
+        }
+        .item.optional:hover { background: rgba(var(--surface-rgb),.04); }
+
         /* Spunta circolare */
         .item-check {
           width: 21px; height: 21px; border-radius: 50%; flex-shrink: 0;
@@ -476,6 +492,12 @@ export default function LanzaroteItinerary() {
         }
         .item.done .item-check-tick { transform: scale(1); }
 
+        .item-time {
+          flex-shrink: 0; min-width: 42px; text-align: right; margin-top: 2px;
+          font-family: 'Cormorant Garamond', serif; font-size: 15px;
+          line-height: 1.2; font-variant-numeric: tabular-nums;
+          color: var(--accent); opacity: .92; white-space: nowrap;
+        }
         .item-ico { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
         .item-body { flex: 1; min-width: 0; }
         .item-txt {
@@ -489,6 +511,17 @@ export default function LanzaroteItinerary() {
         }
         .item.done .item-txt { background-size: 100% 1px; }
         .item-note { font-size: 11px; margin-top: 3px; color: var(--gold); }
+
+        /* Marcatori costo / CACT */
+        .item-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+        .cost-tag {
+          font-size: 9px; letter-spacing: 1px; text-transform: uppercase;
+          padding: 2px 7px; border-radius: 4px; white-space: nowrap;
+          border: 1px solid transparent;
+        }
+        .cost-cact { background: rgba(var(--gold-rgb),.14); color: var(--gold); border-color: rgba(var(--gold-rgb),.32); }
+        .cost-paid { background: rgba(224,82,82,.12); color: #e05252; }
+        .cost-free { background: rgba(124,186,108,.14); color: #7cba6c; }
         .item-chip {
           font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase;
           padding: 2px 8px; border-radius: 4px; flex-shrink: 0;
@@ -679,7 +712,60 @@ export default function LanzaroteItinerary() {
               <div className="timeline">
                 {days.map(d => {
                   const isOpen = openDay === d.day;
-                  const dayDone = d.items.length > 0 && d.items.every((_, i) => done.has(`${d.day}-${i}`));
+                  // Il giorno è "completato" solo quando tutte le voci OBBLIGATORIE sono spuntate.
+                  const hasMandatory = d.items.some(it => !it.optional);
+                  const dayDone = hasMandatory && d.items.every((it, i) => it.optional || done.has(`${d.day}-${i}`));
+                  const indexed = d.items.map((item, i) => ({ item, i }));
+                  const mandatoryItems = indexed.filter(x => !x.item.optional);
+                  const optionalItems = indexed.filter(x => x.item.optional);
+                  const renderItem = ({ item, i }) => {
+                    const key = `${d.day}-${i}`;
+                    const isDone = done.has(key);
+                    return (
+                      <div
+                        key={i}
+                        className={`item ${isDone ? "done" : ""} ${item.optional ? "optional" : ""}`}
+                        style={{ "--accent": d.accent }}
+                        onClick={() => toggleDone(key)}
+                        role="button"
+                        tabIndex={0}
+                        aria-pressed={isDone}
+                        aria-label={`${isDone ? "Segna come da fare" : "Segna come completata"}: ${item.text}`}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            toggleDone(key);
+                          }
+                        }}
+                      >
+                        <div className="item-check">
+                          <span className="item-check-tick">✓</span>
+                        </div>
+                        {item.time && <div className="item-time">{item.time}</div>}
+                        <div className="item-ico">{item.icon}</div>
+                        <div className="item-body">
+                          <div className="item-txt">{item.text}</div>
+                          {item.note && <div className="item-note">{item.note}</div>}
+                          {item.cost && (
+                            <div className="item-tags">
+                              {item.cost === "cact" && <span className="cost-tag cost-cact">🎟️ CACT{item.price ? ` · ${item.price} a persona` : ""}</span>}
+                              {item.cost === "paid" && <span className="cost-tag cost-paid">€ a pagamento</span>}
+                              {item.cost === "free" && <span className="cost-tag cost-free">Gratis</span>}
+                            </div>
+                          )}
+                        </div>
+                        <div
+                          className="item-chip"
+                          style={{
+                            background: `${typeColors[item.type]}1e`,
+                            color: typeColors[item.type],
+                          }}
+                        >
+                          {typeLabels[item.type]}
+                        </div>
+                      </div>
+                    );
+                  };
                   return (
                     <div
                       key={d.day}
@@ -716,46 +802,13 @@ export default function LanzaroteItinerary() {
 
                       <div className="day-body">
                         <div className="day-items">
-                          {d.items.map((item, i) => {
-                            const key = `${d.day}-${i}`;
-                            const isDone = done.has(key);
-                            return (
-                              <div
-                                key={i}
-                                className={`item ${isDone ? "done" : ""}`}
-                                style={{ "--accent": d.accent }}
-                                onClick={() => toggleDone(key)}
-                                role="button"
-                                tabIndex={0}
-                                aria-pressed={isDone}
-                                aria-label={`${isDone ? "Segna come da fare" : "Segna come completata"}: ${item.text}`}
-                                onKeyDown={(e) => {
-                                  if (e.key === "Enter" || e.key === " ") {
-                                    e.preventDefault();
-                                    toggleDone(key);
-                                  }
-                                }}
-                              >
-                                <div className="item-check">
-                                  <span className="item-check-tick">✓</span>
-                                </div>
-                                <div className="item-ico">{item.icon}</div>
-                                <div className="item-body">
-                                  <div className="item-txt">{item.text}</div>
-                                  {item.note && <div className="item-note">{item.note}</div>}
-                                </div>
-                                <div
-                                  className="item-chip"
-                                  style={{
-                                    background: `${typeColors[item.type]}1e`,
-                                    color: typeColors[item.type],
-                                  }}
-                                >
-                                  {typeLabels[item.type]}
-                                </div>
-                              </div>
-                            );
-                          })}
+                          {mandatoryItems.map(renderItem)}
+                          {optionalItems.length > 0 && (
+                            <>
+                              <div className="opt-divider"><span>Opzionali</span></div>
+                              {optionalItems.map(renderItem)}
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -764,7 +817,7 @@ export default function LanzaroteItinerary() {
               </div>
 
               <div className="note-box" style={{ marginTop: 28 }}>
-                🎟️ <strong style={{ color: "rgba(var(--text-rgb),.75)" }}>CATS Ticket</strong> — Considera l'acquisto del biglietto combinato CATS per accedere alle principali attrazioni di César Manrique (Jameos del Agua, Cueva de las Verdes, Jardín de Cactus, Fundación, ecc.) a prezzo ridotto.<br /><br />
+                🎟️ <strong style={{ color: "rgba(var(--text-rgb),.75)" }}>Biglietti CACT</strong> — Le voci segnate <strong style={{ color: "var(--gold)" }}>🎟️ CACT</strong> (Jardín de Cactus, Cueva de los Verdes, Jameos del Agua, Mirador del Río, Timanfaya) sono i Centri d'Arte del Cabildo di Lanzarote: l'ingresso si acquista online su <a href="https://ventaonline.cactlanzarote.com" target="_blank" rel="noreferrer" style={{ color: "var(--gold)" }}>ventaonline.cactlanzarote.com</a>, prenotando <strong style={{ color: "rgba(var(--text-rgb),.75)" }}>data e ora</strong> (obbligatorio per la Cueva de los Verdes). Il vecchio <em>bono</em> combinato multi-centro non è più disponibile (dal 2024): si comprano biglietti singoli. La Casa Museo del Campesino è <strong style={{ color: "rgba(var(--text-rgb),.75)" }}>gratuita</strong>; Fundación César Manrique e Lagomar hanno biglietti propri (non CACT).<br /><br />
                 🚗 <strong style={{ color: "rgba(var(--text-rgb),.75)" }}>Auto</strong> — Ritiro Cicar: 18/06 ore 18:00 · Consegna: 25/06 ore 06:00.
               </div>
             </>

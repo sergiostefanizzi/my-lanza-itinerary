@@ -83,6 +83,28 @@ L'ordine di `stops` definisce il percorso (polyline). I giorni **senza** `stops`
 
 **Coordinate**: assegnate manualmente (approssimate sui luoghi reali), non c'è geocoding. `Lanzorote26.md` è il riferimento per i nomi dei luoghi.
 
+## Orari / timeline (campo `time`)
+
+Ogni voce di `days[].items` può avere un campo opzionale **`time`** (stringa, es. `"10:00"`): l'orario pianificato dell'attività, mostrato come etichetta a sinistra della riga (`.item-time`, font Cormorant nell'accent del giorno). Gli **orari di apertura/chiusura** delle attrazioni (vincoli) vanno nel campo `note` (es. `"Solo sabato · chiude alle 14:30"`).
+
+**Fonte orari**: verificati sul web (centri CACT Lanzarote = `cactlanzarote.com/horarios-y-precios`, validi tutto l'anno; mercato di Haría = sabato ~10:00–14:30). Da riverificare prima del viaggio: gli orari possono cambiare. Vincoli noti che condizionano l'ordine: **Mercado de Haría chiude 14:30**, **Cueva de los Verdes 9:30–16:15** (chiude prima di Jameos, va visitata prima), **Timanfaya accesso 09:00–15:45 solo con prenotazione online**, Jardín de Cactus / Mirador del Río 10:00–17:00, Jameos del Agua 10:00–18:00.
+
+**Stato milestone "informazioni temporali"** (una milestone per giorno, G2→G7): **G3 fatto** (timeline oraria + orari nei note, Cueva spostata prima di Jameos). Restano G2, G4, G5, G6, G7.
+
+## Costo / biglietti CACT (campo `cost`)
+
+Ogni voce di `days[].items` può avere un campo opzionale **`cost`** con tre valori, reso come pill colorata sotto il testo (`.cost-tag`):
+- `"cact"` → **🎟️ CACT** (oro): centro CACT del Cabildo, biglietto da comprare sul sito ufficiale.
+- `"paid"` → **€ a pagamento** (rosso): tour/ingresso esterno a pagamento (es. Timanfaya tour, La Graciosa, buggy, degustazione, Fundación, Lagomar).
+- `"free"` → **Gratis** (verde): es. mercato, spiagge, Casa Museo del Campesino, piscine di Punta Mujeres.
+- Assente → nessuna pill (pasti `cibo`, logistica).
+
+Le voci con `cost: "cact"` hanno anche un campo **`price`** (es. `"€9"`) col prezzo del biglietto adulto **a persona**, mostrato nella pill: `🎟️ CACT · €9 a persona`. Prezzi ufficiali verificati 2026: Jardín de Cactus €9, Cueva de los Verdes €17, Jameos del Agua €17 (da riverificare prima del viaggio). I tour `cost: "paid"` tengono il prezzo nel `note` (es. `"€57 / persona"`).
+
+**Fatti CACT (verificati 2026)**: il **bono combinato multi-centro è stato eliminato dal 2024**; si comprano **biglietti singoli online** su `ventaonline.cactlanzarote.com`, prenotando data e ora (obbligatorio per la Cueva de los Verdes). Centri CACT: Jardín de Cactus, Cueva de los Verdes, Jameos del Agua, Mirador del Río, Montañas del Fuego (Timanfaya), Castillo de San José, Casa Museo del Campesino (quest'ultima **gratuita**). **Non** sono CACT: Fundación César Manrique e Lagomar (biglietti propri). Queste info stanno nella note-box "Biglietti CACT" del tab Itinerario (con link al sito).
+
+Il campo `cost` va aggiunto a ogni giorno nella sua milestone "informazioni temporali" (per ora applicato solo a **G3**).
+
 ## Spunta attività (completamento)
 
 Nella tab "Itinerario" ogni voce di `days[].items` è marcabile come **completata** (clic sulla spunta circolare a sinistra **o** sull'intera riga; ri-clic per smarcare). Tastiera: l'item è `role="button"` / `tabIndex=0`, attivabile con `Enter`/`Spazio`.
@@ -91,7 +113,9 @@ Nella tab "Itinerario" ogni voce di `days[].items` è marcabile come **completat
 
 **Persistenza**: `localStorage`, chiave `doneItems` (array serializzato del Set). È locale al singolo dispositivo/browser — **non** è condivisa tra utenti né tra device (scelta esplicita: niente backend/DB). `getInitialDone()` la rilegge al mount; un `useEffect` la riscrive a ogni cambio.
 
-**UI**: attività completata → `.item.done` (testo barrato via `background-size` animato + opacità `.45`); la spunta `.item-check` si riempie con l'accent del giorno (passato via CSS var inline `--accent`). Quando **tutte** le voci di un giorno sono done → `.day-card.completed` (card sbiadita: `opacity`/`saturate` ridotti, attenuati su hover e da aperta) + `.day-done-check` (✓ nell'accent vicino al chevron, che sostituisce il `badge` se presente). **Niente contatori** per scelta esplicita.
+**UI**: attività completata → `.item.done` (testo barrato via `background-size` animato + opacità `.45`); la spunta `.item-check` si riempie con l'accent del giorno (passato via CSS var inline `--accent`). Quando tutte le voci **obbligatorie** di un giorno sono done → `.day-card.completed` (card sbiadita: `opacity`/`saturate` ridotti, attenuati su hover e da aperta) + `.day-done-check` (✓ nell'accent vicino al chevron, che sostituisce il `badge` se presente). **Niente contatori** per scelta esplicita.
+
+**Attività opzionali** (campo `optional: true`): le voci marcate `optional` sono renderizzate in una **sezione separata "Opzionali"** (divisore `.opt-divider`) sotto le obbligatorie, con stile a bordo tratteggiato (`.item.optional`). **Non** contano per il completamento del giorno: `dayDone = hasMandatory && d.items.every((it, i) => it.optional || done.has(...))`. Restano comunque spuntabili individualmente. Il render è estratto in una funzione locale `renderItem({item, i})` (l'indice `i` resta quello originale in `d.items`, per coerenza con le chiavi `done`); gli item si partizionano in `mandatoryItems` / `optionalItems`. Esempio G3: Mercado de Haría e Piscine di Punta Mujeres sono opzionali.
 
 ## Deploy
 
