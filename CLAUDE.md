@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Stato del progetto
 
-App React **personale** per consultare un itinerario di viaggio a Lanzarote (giugno 2026). Lingua dei contenuti: italiano. L'app è un single-page React senza routing né backend.
+App React **personale** per consultare un itinerario di viaggio a Lanzarote (giugno 2026). Lingua dei contenuti: italiano. L'app è un single-page React senza routing. **Accesso riservato**: è protetta da autenticazione email/password (Supabase); il solo "backend" è l'auth (Supabase + una funzione serverless Vercel per il limite registrazioni). Vedi sezione "Autenticazione".
 
 Milestone di scaffolding completate: **M0–M4** (CLAUDE.md, scaffolding Vite, migrazione in `src/`, verifica end-to-end, README + istruzioni deploy Vercel). Piano archiviato: `C:\Users\sergi\.claude\plans\voglio-costuire-un-app-rosy-cloud.md`.
 
@@ -23,6 +23,39 @@ Contenuti itinerario allineati a `Lanzorote26.md` (tour confermati giugno 2026, 
 - Deploy target: **Vercel** (auto-detection del preset Vite, no `vercel.json`)
 - **Leaflet** + **react-leaflet** per la mappa (unica libreria UI esterna, introdotta su richiesta esplicita dell'utente per l'itinerario visuale). Tile CARTO (gratis, no API key).
 - A parte la mappa, il componente itinerario resta self-contained con stili inline
+- **Supabase** (`@supabase/supabase-js`) per l'autenticazione email/password (accesso protetto). Vedi sezione "Autenticazione".
+
+## Autenticazione (accesso protetto)
+
+L'app è ad **accesso riservato**: per usarla bisogna **registrarsi/loggarsi con email + password**. Deroga esplicita al "no backend" originale (app personale, pochi utenti fidati). Niente Google/Apple, **niente conferma email** (si entra subito).
+
+**Provider**: Supabase Auth. Si usano le **nuove API keys** (non le legacy `anon`/`service_role`, in dismissione a fine 2026):
+- **publishable key** (`sb_publishable_...`) → client browser, pubblica per design (`src/lib/supabaseClient.js`).
+- **secret key** (`sb_secret_...`) → **solo** lato server, nella funzione `/api/register`; mai esposta al client.
+
+**Configurazione Supabase** (dashboard): provider Email ON, **Confirm email OFF**, **registrazioni pubbliche OFF** (Authentication → settings: "Allow new users to sign up" disattivato). Così l'**unico** modo per creare utenti è la funzione serverless con la secret key → il client non può bypassare il limite chiamando `signUp`. Funzione SQL per il conteggio (chiamata via RPC dal server):
+```sql
+create or replace function public.count_users()
+returns integer language sql security definer set search_path = '' as $$
+  select count(*)::int from auth.users;
+$$;
+```
+
+**Limite registrazioni** (`MAX_USERS`): la funzione serverless `api/register.js` legge `process.env.MAX_USERS`, conta gli utenti con `rpc('count_users')` (secret key) e risponde **403** oltre soglia; altrimenti crea l'utente con `admin.createUser({ email, password, email_confirm: true })` (email già confermata → login immediato), **409** se l'email esiste già. Il numero si cambia da **Vercel** (env var) senza toccare il codice.
+
+**Flussi**: registrazione → `POST /api/register` poi `signInWithPassword`; login → `signInWithPassword` (diretto a Supabase).
+
+**Sessione ≥3 settimane**: comportamento **di default** di Supabase (`persistSession` + `autoRefreshToken` su localStorage, refresh token che non scade). Non abilitare timeout di inattività/time-box.
+
+**Gate UI**: `App.jsx` osserva la sessione (`getSession` + `onAuthStateChange`); senza sessione mostra `<AuthGate />` (login/registrazione a tema), altrimenti `<LanzaroteItinerary />` + pulsante "Esci". `LanzaroteItinerary.jsx` **non si tocca** (l'auth è un cancello davanti).
+
+**Variabili d'ambiente** (`.env` locale gitignored + Vercel → Settings → Environment Variables): `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` (client, pubbliche); `SUPABASE_SECRET_KEY`, `MAX_USERS` (solo server). Template in **`.env.example`**. La funzione serverless legge anche le `VITE_*` da `process.env` (su Vercel sono disponibili lato server; il prefisso governa solo l'esposizione al bundle client).
+
+**Dev locale**: `npm run dev` (Vite) **non** serve `/api`. Login e gate si provano con `npm run dev`; la **registrazione** (funzione serverless) richiede `vercel dev` o un preview deploy su Vercel.
+
+**Sicurezza**: la secret key sta **solo** nelle env della funzione serverless (revocabile/rigenerabile singolarmente se trapela, senza ruotare il JWT secret). Il client **non espone tabelle** (fa solo auth) → l'avviso Supabase "publishable safe in browser **se** RLS abilitato" non ci riguarda; unico oggetto DB è `count_users()`, chiamato solo lato server. Reset password "dimenticata" è **fuori scope** (richiede invio email).
+
+**Stato milestone**: **M1 completata** (dipendenza `@supabase/supabase-js`, `src/lib/supabaseClient.js`, `.env.example`, doc). **M2** (funzione `/api/register` + limite `MAX_USERS`) e **M3** (`AuthGate` + gate in `App.jsx` + logout) ancora da fare.
 
 ## File chiave
 
@@ -31,6 +64,7 @@ Contenuti itinerario allineati a `Lanzorote26.md` (tour confermati giugno 2026, 
 - **`src/App.jsx`** — wrapper minimale che renderizza `<LanzaroteItinerary />`. Aggiungere qui eventuali provider/router globali in futuro.
 - **`src/main.jsx`** — entry point: `createRoot` + `<StrictMode>` + import di `leaflet/dist/leaflet.css` e `./index.css`.
 - **`src/index.css`** — reset minimo (`html, body { margin: 0 }`). Tutto il resto degli stili vive inline nel componente.
+- **`src/lib/supabaseClient.js`** — client Supabase per il browser (publishable key, sessione persistente/auto-refresh). Vedi sezione "Autenticazione".
 - **`Lanzorote26.md`** — appunti grezzi del viaggio (voli, alloggio, noleggio auto, attrazioni, ristoranti, tour). **Fonte di verità** per le evolutive future dei contenuti. Non viene importato dall'app: serve come reference per quando si aggiorneranno i dati dell'itinerario.
 - **`README.md`** — descrizione progetto, comandi di sviluppo e istruzioni di deploy su Vercel.
 
@@ -38,12 +72,15 @@ Contenuti itinerario allineati a `Lanzorote26.md` (tour confermati giugno 2026, 
 
 ```
 ├── index.html               # entry HTML in root (convenzione Vite)
+├── .env.example             # template variabili Supabase (copiare in .env)
 ├── package.json
 ├── vite.config.js
 ├── src/
 │   ├── main.jsx
 │   ├── App.jsx
 │   ├── index.css
+│   ├── lib/
+│   │   └── supabaseClient.js # client Supabase (browser)
 │   └── components/
 │       ├── LanzaroteItinerary.jsx
 │       └── DayMap.jsx
