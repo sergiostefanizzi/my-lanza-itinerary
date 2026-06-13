@@ -1,5 +1,6 @@
 import { useState, useLayoutEffect, useEffect, useRef } from "react";
 import DayMap from "./DayMap.jsx";
+import ExpensesTab from "./ExpensesTab.jsx";
 import { fetchDoneKeys, addDone, removeDone, subscribeDoneItems, unsubscribeDoneItems } from "../lib/doneItems.js";
 
 // Base del viaggio (alloggio): punto di partenza/ritorno delle giornate.
@@ -954,6 +955,7 @@ export default function LanzaroteItinerary() {
             {[
               ["itinerario", "Itinerario"],
               ["budget", "Budget"],
+              ["spese", "Spese"],
               ["mappa", "Mappa"],
             ].map(([t, label]) => (
               <button key={t} className={`tab-btn ${tab === t ? "on" : ""}`} onClick={() => setTab(t)}>
@@ -1145,6 +1147,9 @@ export default function LanzaroteItinerary() {
               </div>
             </>
           )}
+
+          {/* ── Spese (cassa comune) ── */}
+          {tab === "spese" && <ExpensesTab />}
 
           {/* ── Mappa ── */}
           {tab === "mappa" && (() => {

@@ -41,7 +41,7 @@ returns integer language sql security definer set search_path = '' as $$
 $$;
 ```
 
-**Limite registrazioni** (`MAX_USERS`): la funzione serverless `api/register.js` accetta solo **POST**, valida email/password (password ≥ 6 → `400 invalid_email`/`weak_password`), legge `process.env.MAX_USERS`, conta gli utenti con `rpc('count_users')` (secret key) e risponde **403 `limit`** oltre soglia; altrimenti crea l'utente con `admin.createUser({ email, password, email_confirm: true })` (email già confermata → login immediato), **409 `email_exists`** se l'email esiste già, **200 `{ ok: true }`** al successo. Config mancante (`VITE_SUPABASE_URL`/`SUPABASE_SECRET_KEY`/`MAX_USERS` intero) → **500 `server_misconfigured`** (fail-closed). Nessun segreto nel corpo della risposta. Il numero si cambia da **Vercel** (env var) senza toccare il codice.
+**Limite registrazioni** (`MAX_USERS`): la funzione serverless `api/register.js` accetta solo **POST**, valida email/password/**nome** (password ≥ 6, nome non vuoto ≤ 60 → `400 invalid_email`/`weak_password`/`invalid_name`), legge `process.env.MAX_USERS`, conta gli utenti con `rpc('count_users')` (secret key) e risponde **403 `limit`** oltre soglia; altrimenti crea l'utente con `admin.createUser({ email, password, email_confirm: true, user_metadata: { name } })` (email già confermata → login immediato) **e inserisce la riga `profiles` (id, name)** per la cassa comune, **409 `email_exists`** se l'email esiste già, **200 `{ ok: true }`** al successo. Config mancante (`VITE_SUPABASE_URL`/`SUPABASE_SECRET_KEY`/`MAX_USERS` intero) → **500 `server_misconfigured`** (fail-closed). Nessun segreto nel corpo della risposta. Il numero si cambia da **Vercel** (env var) senza toccare il codice.
 
 **Flussi**: registrazione → `POST /api/register` poi `signInWithPassword`; login → `signInWithPassword` (diretto a Supabase).
 
@@ -61,12 +61,14 @@ $$;
 
 - **`src/components/LanzaroteItinerary.jsx`** — componente React unico. Self-contained: `useState` per accordion/tab/tema/mappa/spunte (`done`), zero dipendenze UI esterne, stili interamente in un blocco `<style>{...}</style>` inline (no Tailwind, no shadcn/ui, no CSS esterno). Dati hardcoded nelle costanti `days[]`, `budget[]`, `typeColors`, `typeLabels`. Il tema è gestito via CSS variables (vedi sezione "Theming"). Lo stato delle attività completate è in `localStorage` (vedi sezione "Spunta attività").
 - **`src/components/DayMap.jsx`** — mappa Leaflet di un singolo giorno: tile CARTO (chiaro/scuro in base al tema), polyline del percorso nell'accent del giorno, segnaposto numerati (`L.divIcon`, niente immagini), marker della base (alloggio). Props: `day`, `base`, `theme`.
+- **`src/components/ExpensesTab.jsx`** — tab "Spese" (cassa comune stile Splitwise): form inserimento (nome, importo €, categoria da lista fissa colorata, partecipanti multi-select), feed a fumetti in tempo reale, eliminazione della propria spesa, prompt "imposta il tuo nome" per utenti senza profilo. Self-contained con `<style>` inline (CSS var del tema). Usa `src/lib/expenses.js`. Vedi sezione "Spese condivise".
 - **`src/App.jsx`** — gate di autenticazione: osserva la sessione Supabase (`getSession` + `onAuthStateChange`); senza sessione renderizza `<AuthGate />`, con sessione `<LanzaroteItinerary />` + pulsante "Esci" (overlay fisso in alto a **sinistra**, stile a pillola con piccolo `<style>` proprio, usa le CSS var del tema). Non tocca `LanzaroteItinerary.jsx`. Vedi sezione "Autenticazione".
-- **`src/components/AuthGate.jsx`** — schermata login/registrazione, self-contained con `<style>` inline e palette propria (copia delle CSS var dei due temi), stesso toggle sole/luna e chiave `localStorage('theme')` dell'itinerario. Tab Accedi/Registrati, campi email+password (con mostra/nascondi), messaggi d'errore in italiano. Login → `signInWithPassword`; registrazione → `POST /api/register` poi `signInWithPassword`. Vedi sezione "Autenticazione".
+- **`src/components/AuthGate.jsx`** — schermata login/registrazione, self-contained con `<style>` inline e palette propria (copia delle CSS var dei due temi), stesso toggle sole/luna e chiave `localStorage('theme')` dell'itinerario. Tab Accedi/Registrati; in registrazione c'è anche il campo **Nome** (obbligatorio, inviato a `/api/register`); campi email+password (con mostra/nascondi), messaggi d'errore in italiano. Login → `signInWithPassword`; registrazione → `POST /api/register` poi `signInWithPassword`. Vedi sezione "Autenticazione".
 - **`src/main.jsx`** — entry point: `createRoot` + `<StrictMode>` + import di `leaflet/dist/leaflet.css` e `./index.css`.
 - **`src/index.css`** — reset minimo (`html, body { margin: 0 }`). Tutto il resto degli stili vive inline nel componente.
 - **`src/lib/supabaseClient.js`** — client Supabase per il browser (publishable key, sessione persistente/auto-refresh). Vedi sezione "Autenticazione".
 - **`src/lib/doneItems.js`** — accesso dati alle **spunte condivise** (tabella `done_items` su Supabase): `fetchDoneKeys()`, `addDone(key)`, `removeDone(key)`, `subscribeDoneItems({onInsert,onDelete})` (Realtime). Accesso via publishable key + RLS (solo `authenticated`). Vedi sezione "Spunta attività".
+- **`src/lib/expenses.js`** — accesso dati + logica della **cassa comune** (spese condivise stile Splitwise). Tabelle `profiles` (id+nome) ed `expenses` su Supabase. Profili: `fetchProfiles`/`getMyName`/`setMyName`. Spese: `fetchExpenses`/`addExpense`/`deleteExpense`/`subscribeExpenses`/`unsubscribeExpenses` (Realtime). Logica pura (no rete): `computeBalances(expenses)` → saldi netti, `computeSettlement(balances)` → trasferimenti minimi "chi deve a chi". RLS (solo `authenticated`). Vedi sezione "Spese condivise".
 - **`Lanzorote26.md`** — appunti grezzi del viaggio (voli, alloggio, noleggio auto, attrazioni, ristoranti, tour). **Fonte di verità** per le evolutive future dei contenuti. Non viene importato dall'app: serve come reference per quando si aggiorneranno i dati dell'itinerario.
 - **`README.md`** — descrizione progetto, comandi di sviluppo e istruzioni di deploy su Vercel.
 
@@ -85,10 +87,12 @@ $$;
 │   ├── index.css
 │   ├── lib/
 │   │   ├── supabaseClient.js # client Supabase (browser)
-│   │   └── doneItems.js      # accesso dati spunte condivise (tabella + realtime)
+│   │   ├── doneItems.js      # accesso dati spunte condivise (tabella + realtime)
+│   │   └── expenses.js       # cassa comune: dati spese/profili + logica settle-up
 │   └── components/
 │       ├── LanzaroteItinerary.jsx
 │       ├── AuthGate.jsx      # schermata login/registrazione (gate)
+│       ├── ExpensesTab.jsx   # tab "Spese": cassa comune (Splitwise) + feed realtime
 │       └── DayMap.jsx
 ├── _refs/                   # riferimenti locali (mockup/immagini), gitignored — mai pushato
 ├── Lanzorote26.md
@@ -167,6 +171,22 @@ Nella tab "Itinerario" ogni voce di `days[].items` è marcabile come **completat
 **UI**: attività completata → `.item.done` (testo barrato via `background-size` animato; l'opacità `.45` si applica a `.item-main`, **non** all'intera `.item`, così il pannello dettagli espanso resta leggibile); la spunta `.item-check` si riempie con l'accent del giorno (passato via CSS var inline `--accent`). Quando tutte le voci **obbligatorie** di un giorno sono done → `.day-card.completed` (card sbiadita: `opacity`/`saturate` ridotti, attenuati su hover e da aperta) + `.day-done-check` (✓ nell'accent vicino al chevron, che sostituisce il `badge` se presente). **Niente contatori** per scelta esplicita.
 
 **Attività opzionali** (campo `optional: true`): le voci marcate `optional` sono renderizzate in una **sezione separata "Opzionali"** (divisore `.opt-divider`) sotto le obbligatorie, con stile a bordo tratteggiato (`.item.optional`). **Non** contano per il completamento del giorno: `dayDone = hasMandatory && d.items.every((it, i) => it.optional || done.has(...))`. Restano comunque spuntabili individualmente. Il render è estratto in una funzione locale `renderItem({item, i})` (l'indice `i` resta quello originale in `d.items`, per coerenza con le chiavi `done`); gli item si partizionano in `mandatoryItems` / `optionalItems`. Esempio G3: Mercado de Haría e Piscine di Punta Mujeres sono opzionali.
+
+## Spese condivise (cassa comune / Splitwise)
+
+Tab **"Spese"** (4° tab, tra Budget e Mappa): una **cassa comune** del viaggio condivisa tra tutti gli utenti loggati, in **tempo reale**. È **distinta dal tab Budget** (che resta il preventivo `budget[]` in sola lettura). Componente: **`src/components/ExpensesTab.jsx`** (self-contained, `<style>` inline con le CSS var del tema, renderizzato da `LanzaroteItinerary` quando `tab === "spese"`). Dati/logica in **`src/lib/expenses.js`**.
+
+**Modello dati (Supabase)**: due tabelle con **RLS** (solo `authenticated`).
+- `profiles` (`id` = `auth.users.id`, `name`): nome utente. Letta da tutti, scrivibile solo la propria riga. Popolata da `/api/register` alla registrazione (col campo Nome); per utenti pre-esistenti senza riga, il tab mostra un prompt **"imposta il tuo nome"** (`setMyName` → upsert).
+- `expenses` (`id`, `name`, `amount numeric(10,2)>0`, `category`, `payer_id` default `auth.uid()`, `payer_name` denormalizzato, `participant_ids uuid[]`, **`created_by`** default `auth.uid()` = chi ha registrato la spesa, `created_at`): una riga per spesa. RLS: insert `with check (created_by = auth.uid())` (il **pagatore può essere chiunque**, ma non si falsifica chi registra), delete `using (created_by = auth.uid())` (cancella **chi l'ha inserita**). **Realtime** abilitato (publication `supabase_realtime`).
+
+**Inserimento**: form con nome spesa, importo €, **categoria** da lista fissa colorata (`CATEGORIES`: cibo/trasporti/alloggio/attività/spesa/altro) e **"Chi ha pagato"** (chip a **selezione singola** dai `profiles`, default = utente loggato; si può quindi **segnare una spesa per conto di un altro utente**). La spesa si divide **equamente tra TUTTI gli utenti registrati**: `participant_ids` = snapshot di tutti i `profiles` al momento dell'inserimento (così `computeBalances`/`computeSettlement` restano invariati; chi si registra dopo non entra nelle spese passate). `addExpense({…, payerId, payerName, participantIds})` ritorna la riga inserita → fumetto mostrato subito, con **dedup per id** rispetto all'eco Realtime.
+
+**Feed a fumetti**: lista dalla spesa più recente; ogni voce = avatar (iniziale del `payer_name`, colore deterministico da `payer_id`) + fumetto "**[Nome]** ha pagato **€xx.xx** per **[Nome spesa]**" + chip categoria + "diviso tra N persone" + (se il pagatore ≠ chi l'ha inserita) "**segnata da [Nome]**" + data; ✕ per eliminare **solo le spese che hai inserito** (`created_by === myId`). Aggiornamento **Realtime** (`subscribeExpenses` INSERT/DELETE, cleanup `unsubscribeExpenses`).
+
+**Settle-up "Chi deve a chi?"** (logica pura in `expenses.js`): `computeBalances(expenses)` calcola il saldo netto per utente (payer accreditato dell'intero importo, ogni partecipante addebitato `amount / n`); `computeSettlement(balances)` produce la lista **minima** di trasferimenti "X deve €Z a Y" (greedy: maggior debitore ↔ maggior creditore). Nel tab: bottone **"Chi deve a chi?"** (toggle) → card con i trasferimenti minimi + un riepilogo dei **saldi netti** per persona (chip verde a credito `#7cba6c` / rosso a debito `#e05252`). `balances`/`settlement` sono `useMemo` su `expenses`, quindi si **ricalcolano da soli** a ogni spesa aggiunta/eliminata (anche via Realtime). Se i saldi sono a zero → "Siete in pari".
+
+**Note**: `payer_name` denormalizzato → i fumetti vecchi mantengono il nome al momento dell'inserimento. Editing spese fuori scope (si elimina e si re-inserisce). Importi parsati accettando la virgola (`replace(",",".")`).
 
 ## Espansione voci (immagine + descrizione)
 

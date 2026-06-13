@@ -40,12 +40,16 @@ export default async function handler(req, res) {
   }
   const email = String(body?.email ?? '').trim().toLowerCase()
   const password = String(body?.password ?? '')
+  const name = String(body?.name ?? '').trim()
 
   if (!EMAIL_RE.test(email)) {
     return res.status(400).json({ error: 'invalid_email' })
   }
   if (password.length < 6) {
     return res.status(400).json({ error: 'weak_password' })
+  }
+  if (!name || name.length > 60) {
+    return res.status(400).json({ error: 'invalid_name' })
   }
 
   // Client con secret key: niente sessione, niente refresh (uso server one-shot).
@@ -63,11 +67,13 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: 'limit' })
   }
 
-  // Creazione utente con email gia' confermata -> login immediato.
-  const { error: createError } = await supabase.auth.admin.createUser({
+  // Creazione utente con email gia' confermata -> login immediato. Il nome va anche
+  // nei user_metadata (comodo lato auth), ma la fonte usata dall'app e' `profiles`.
+  const { data: created, error: createError } = await supabase.auth.admin.createUser({
     email,
     password,
     email_confirm: true,
+    user_metadata: { name },
   })
 
   if (createError) {
@@ -79,6 +85,16 @@ export default async function handler(req, res) {
     }
     console.error('Errore creazione utente:', createError)
     return res.status(500).json({ error: 'create_failed' })
+  }
+
+  // Riga profilo (id utente + nome): serve al selettore partecipanti e al feed spese.
+  const userId = created?.user?.id
+  if (userId) {
+    const { error: profileError } = await supabase.from('profiles').insert({ id: userId, name })
+    if (profileError) {
+      // Utente creato comunque: il nome si potra' reimpostare dall'app (setMyName).
+      console.error('Creazione profilo fallita (utente creato):', profileError)
+    }
   }
 
   return res.status(200).json({ ok: true })

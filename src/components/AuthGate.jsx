@@ -22,6 +22,7 @@ function getInitialTheme() {
 export default function AuthGate() {
   const [theme, setTheme] = useState(getInitialTheme);
   const [mode, setMode] = useState("login"); // "login" | "register"
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
@@ -52,7 +53,7 @@ export default function AuthGate() {
     const res = await fetch("/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password, name: name.trim() }),
     });
     let payload = null;
     try { payload = await res.json(); } catch (e) { /* risposta non-JSON */ }
@@ -72,6 +73,7 @@ export default function AuthGate() {
     else if (res.status === 409) setError("Questa email è già registrata. Prova ad accedere.");
     else if (code === "invalid_email") setError("L'indirizzo email non è valido.");
     else if (code === "weak_password") setError("La password deve avere almeno 6 caratteri.");
+    else if (code === "invalid_name") setError("Inserisci un nome (max 60 caratteri).");
     else if (res.status === 404) setError("La registrazione non è disponibile con «npm run dev»: richiede «vercel dev» o il deploy su Vercel.");
     else setError("Errore durante la registrazione. Riprova più tardi.");
   }
@@ -79,6 +81,7 @@ export default function AuthGate() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
+    if (mode === "register" && !name.trim()) { setError("Inserisci il tuo nome."); return; }
     if (!email || !password) { setError("Inserisci email e password."); return; }
     if (mode === "register" && password.length < 6) {
       setError("La password deve avere almeno 6 caratteri.");
@@ -308,6 +311,22 @@ export default function AuthGate() {
 
         <form onSubmit={handleSubmit}>
           {error && <div className="msg error">{error}</div>}
+
+          {mode === "register" && (
+            <div className="field">
+              <label htmlFor="auth-name">Nome</label>
+              <input
+                id="auth-name"
+                type="text"
+                autoComplete="name"
+                placeholder="Come ti chiami"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                disabled={loading}
+                maxLength={60}
+              />
+            </div>
+          )}
 
           <div className="field">
             <label htmlFor="auth-email">Email</label>
