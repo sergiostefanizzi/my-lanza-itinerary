@@ -41,7 +41,7 @@ returns integer language sql security definer set search_path = '' as $$
 $$;
 ```
 
-**Limite registrazioni** (`MAX_USERS`): la funzione serverless `api/register.js` legge `process.env.MAX_USERS`, conta gli utenti con `rpc('count_users')` (secret key) e risponde **403** oltre soglia; altrimenti crea l'utente con `admin.createUser({ email, password, email_confirm: true })` (email già confermata → login immediato), **409** se l'email esiste già. Il numero si cambia da **Vercel** (env var) senza toccare il codice.
+**Limite registrazioni** (`MAX_USERS`): la funzione serverless `api/register.js` accetta solo **POST**, valida email/password (password ≥ 6 → `400 invalid_email`/`weak_password`), legge `process.env.MAX_USERS`, conta gli utenti con `rpc('count_users')` (secret key) e risponde **403 `limit`** oltre soglia; altrimenti crea l'utente con `admin.createUser({ email, password, email_confirm: true })` (email già confermata → login immediato), **409 `email_exists`** se l'email esiste già, **200 `{ ok: true }`** al successo. Config mancante (`VITE_SUPABASE_URL`/`SUPABASE_SECRET_KEY`/`MAX_USERS` intero) → **500 `server_misconfigured`** (fail-closed). Nessun segreto nel corpo della risposta. Il numero si cambia da **Vercel** (env var) senza toccare il codice.
 
 **Flussi**: registrazione → `POST /api/register` poi `signInWithPassword`; login → `signInWithPassword` (diretto a Supabase).
 
@@ -55,7 +55,7 @@ $$;
 
 **Sicurezza**: la secret key sta **solo** nelle env della funzione serverless (revocabile/rigenerabile singolarmente se trapela, senza ruotare il JWT secret). Il client **non espone tabelle** (fa solo auth) → l'avviso Supabase "publishable safe in browser **se** RLS abilitato" non ci riguarda; unico oggetto DB è `count_users()`, chiamato solo lato server. Reset password "dimenticata" è **fuori scope** (richiede invio email).
 
-**Stato milestone**: **M1 completata** (dipendenza `@supabase/supabase-js`, `src/lib/supabaseClient.js`, `.env.example`, doc). **M2** (funzione `/api/register` + limite `MAX_USERS`) e **M3** (`AuthGate` + gate in `App.jsx` + logout) ancora da fare.
+**Stato milestone**: **M1 completata** (dipendenza `@supabase/supabase-js`, `src/lib/supabaseClient.js`, `.env.example`, doc). **M2 completata** (funzione `api/register.js` + limite `MAX_USERS`). **M3** (`AuthGate` + gate in `App.jsx` + logout) ancora da fare.
 
 ## File chiave
 
@@ -75,6 +75,8 @@ $$;
 ├── .env.example             # template variabili Supabase (copiare in .env)
 ├── package.json
 ├── vite.config.js
+├── api/
+│   └── register.js          # funzione serverless Vercel: crea utenti + limite MAX_USERS
 ├── src/
 │   ├── main.jsx
 │   ├── App.jsx
