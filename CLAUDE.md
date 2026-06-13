@@ -55,13 +55,14 @@ $$;
 
 **Sicurezza**: la secret key sta **solo** nelle env della funzione serverless (revocabile/rigenerabile singolarmente se trapela, senza ruotare il JWT secret). Il client **non espone tabelle** (fa solo auth) → l'avviso Supabase "publishable safe in browser **se** RLS abilitato" non ci riguarda; unico oggetto DB è `count_users()`, chiamato solo lato server. Reset password "dimenticata" è **fuori scope** (richiede invio email).
 
-**Stato milestone**: **M1 completata** (dipendenza `@supabase/supabase-js`, `src/lib/supabaseClient.js`, `.env.example`, doc). **M2 completata** (funzione `api/register.js` + limite `MAX_USERS`). **M3** (`AuthGate` + gate in `App.jsx` + logout) ancora da fare.
+**Stato milestone**: **TUTTE COMPLETATE.** M1 (dipendenza `@supabase/supabase-js`, `src/lib/supabaseClient.js`, `.env.example`, doc); M2 (funzione `api/register.js` + limite `MAX_USERS`); M3 (`src/components/AuthGate.jsx` + gate/logout in `App.jsx`, README aggiornato). Restano azioni manuali dell'utente lato Supabase (provider Email ON, Confirm email OFF, signup pubblico OFF, funzione `count_users()`) e le env su Vercel.
 
 ## File chiave
 
 - **`src/components/LanzaroteItinerary.jsx`** — componente React unico. Self-contained: `useState` per accordion/tab/tema/mappa/spunte (`done`), zero dipendenze UI esterne, stili interamente in un blocco `<style>{...}</style>` inline (no Tailwind, no shadcn/ui, no CSS esterno). Dati hardcoded nelle costanti `days[]`, `budget[]`, `typeColors`, `typeLabels`. Il tema è gestito via CSS variables (vedi sezione "Theming"). Lo stato delle attività completate è in `localStorage` (vedi sezione "Spunta attività").
 - **`src/components/DayMap.jsx`** — mappa Leaflet di un singolo giorno: tile CARTO (chiaro/scuro in base al tema), polyline del percorso nell'accent del giorno, segnaposto numerati (`L.divIcon`, niente immagini), marker della base (alloggio). Props: `day`, `base`, `theme`.
-- **`src/App.jsx`** — wrapper minimale che renderizza `<LanzaroteItinerary />`. Aggiungere qui eventuali provider/router globali in futuro.
+- **`src/App.jsx`** — gate di autenticazione: osserva la sessione Supabase (`getSession` + `onAuthStateChange`); senza sessione renderizza `<AuthGate />`, con sessione `<LanzaroteItinerary />` + pulsante "Esci" (overlay fisso in alto a **sinistra**, stile a pillola con piccolo `<style>` proprio, usa le CSS var del tema). Non tocca `LanzaroteItinerary.jsx`. Vedi sezione "Autenticazione".
+- **`src/components/AuthGate.jsx`** — schermata login/registrazione, self-contained con `<style>` inline e palette propria (copia delle CSS var dei due temi), stesso toggle sole/luna e chiave `localStorage('theme')` dell'itinerario. Tab Accedi/Registrati, campi email+password (con mostra/nascondi), messaggi d'errore in italiano. Login → `signInWithPassword`; registrazione → `POST /api/register` poi `signInWithPassword`. Vedi sezione "Autenticazione".
 - **`src/main.jsx`** — entry point: `createRoot` + `<StrictMode>` + import di `leaflet/dist/leaflet.css` e `./index.css`.
 - **`src/index.css`** — reset minimo (`html, body { margin: 0 }`). Tutto il resto degli stili vive inline nel componente.
 - **`src/lib/supabaseClient.js`** — client Supabase per il browser (publishable key, sessione persistente/auto-refresh). Vedi sezione "Autenticazione".
@@ -85,6 +86,7 @@ $$;
 │   │   └── supabaseClient.js # client Supabase (browser)
 │   └── components/
 │       ├── LanzaroteItinerary.jsx
+│       ├── AuthGate.jsx      # schermata login/registrazione (gate)
 │       └── DayMap.jsx
 ├── _refs/                   # riferimenti locali (mockup/immagini), gitignored — mai pushato
 ├── Lanzorote26.md
