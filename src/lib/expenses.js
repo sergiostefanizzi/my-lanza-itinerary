@@ -48,11 +48,11 @@ export async function fetchExpenses() {
   return data ?? [];
 }
 
-// Inserisce una spesa. `participantIds` = utenti tra cui dividere (>= 1).
-// `payerName` denormalizzato per mostrare il nome nel feed senza join.
-export async function addExpense({ name, amount, category, participantIds, payerName }) {
-  const { data: auth } = await supabase.auth.getUser();
-  const payerId = auth?.user?.id;
+// Inserisce una spesa. `payerId`/`payerName` = chi ha pagato (può essere un utente
+// diverso da chi registra: si può segnare una spesa per conto di un altro).
+// `participantIds` = utenti tra cui dividere (tutti i registrati). `created_by` non
+// si invia: lo imposta il default `auth.uid()` lato DB (= chi registra).
+export async function addExpense({ name, amount, category, participantIds, payerId, payerName }) {
   const { data, error } = await supabase
     .from("expenses")
     .insert({

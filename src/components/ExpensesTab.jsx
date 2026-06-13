@@ -52,7 +52,7 @@ export default function ExpensesTab() {
   const [expName, setExpName] = useState("");
   const [expAmount, setExpAmount] = useState("");
   const [expCategory, setExpCategory] = useState(null);
-  const [selected, setSelected] = useState(() => new Set()); // partecipanti
+  const [payerId, setPayerId] = useState(null); // chi ha pagato (default = me)
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState(null);
   const [showSettle, setShowSettle] = useState(false);
@@ -67,15 +67,9 @@ export default function ExpensesTab() {
   const balances = useMemo(() => computeBalances(expenses), [expenses]);
   const settlement = useMemo(() => computeSettlement(balances), [balances]);
 
-  // Carica i partecipanti tutti pre-selezionati ogni volta che cambia l'elenco profili.
-  function preselectAll(list) {
-    setSelected(new Set(list.map((p) => p.id)));
-  }
-
   async function loadAll() {
     const [profs, exps] = await Promise.all([fetchProfiles(), fetchExpenses()]);
     setProfiles(profs);
-    preselectAll(profs);
     setExpenses(exps);
   }
 
@@ -84,7 +78,9 @@ export default function ExpensesTab() {
     (async () => {
       try {
         const { data: auth } = await supabase.auth.getUser();
-        setMyId(auth?.user?.id ?? null);
+        const uid = auth?.user?.id ?? null;
+        setMyId(uid);
+        setPayerId(uid); // pagatore predefinito = utente loggato
         const nm = await getMyName();
         if (!nm) {
           setNeedName(true);
@@ -128,15 +124,6 @@ export default function ExpensesTab() {
     }
   }
 
-  function toggleParticipant(id) {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }
-
   async function handleAdd(e) {
     e.preventDefault();
     setFormError(null);
@@ -145,23 +132,25 @@ export default function ExpensesTab() {
     if (!name) return setFormError("Dai un nome alla spesa.");
     if (!Number.isFinite(amount) || amount <= 0) return setFormError("Inserisci un importo valido (> 0).");
     if (!expCategory) return setFormError("Scegli una categoria.");
-    if (selected.size < 1) return setFormError("Seleziona almeno un partecipante.");
+    if (!payerId) return setFormError("Indica chi ha pagato.");
 
     setSubmitting(true);
     try {
+      // Divisione equa tra TUTTI i registrati (snapshot dei profili correnti).
       const row = await addExpense({
         name,
         amount,
         category: expCategory,
-        participantIds: [...selected],
-        payerName: myName,
+        participantIds: profiles.map((p) => p.id),
+        payerId,
+        payerName: profileName(payerId),
       });
       // Mostra subito il fumetto (l'eco realtime farà dedup per id).
       if (row) setExpenses((prev) => (prev.some((x) => x.id === row.id) ? prev : [row, ...prev]));
       setExpName("");
       setExpAmount("");
       setExpCategory(null);
-      preselectAll(profiles);
+      setPayerId(myId); // torna al pagatore predefinito
     } catch (err) {
       console.error(err);
       setFormError("Salvataggio della spesa non riuscito. Riprova.");
@@ -229,6 +218,8 @@ export default function ExpensesTab() {
         border-color: rgba(var(--gold-rgb),.42) !important;
       }
       .exp-part .pcheck { margin-right: 5px; opacity: .8; }
+      .exp-hint { font-size: 11.5px; color: rgba(var(--text-rgb),.4); margin-top: 8px; font-style: italic; }
+      .exp-by { font-size: 11px; color: rgba(var(--text-rgb),.4); }
 
       .exp-submit {
         width: 100%; padding: 12px; margin-top: 6px;
@@ -413,19 +404,19 @@ export default function ExpensesTab() {
           </div>
 
           <div className="exp-field">
-            <label className="exp-label">Chi ha partecipato (si divide tra loro)</label>
+            <label className="exp-label">Chi ha pagato</label>
             <div className="exp-chips">
               {profiles.map((p) => (
                 <button
                   key={p.id} type="button"
-                  className={"exp-chip exp-part" + (selected.has(p.id) ? " on" : "")}
-                  onClick={() => toggleParticipant(p.id)} disabled={submitting}
+                  className={"exp-chip exp-part" + (payerId === p.id ? " on" : "")}
+                  onClick={() => setPayerId(p.id)} disabled={submitting}
                 >
-                  <span className="pcheck">{selected.has(p.id) ? "✓" : "+"}</span>
                   {p.name}{p.id === myId ? " (tu)" : ""}
                 </button>
               ))}
             </div>
+            <div className="exp-hint">La spesa è divisa equamente tra tutti gli utenti registrati.</div>
           </div>
 
           <button className="exp-submit" type="submit" disabled={submitting}>
@@ -500,8 +491,11 @@ export default function ExpensesTab() {
                 <div className="exp-meta">
                   <span className="exp-cat-chip" style={{ background: cat.color }}>{cat.label}</span>
                   <span className="exp-split" title={partsTitle}>diviso tra {n} {n === 1 ? "persona" : "persone"}</span>
+                  {e.created_by && e.created_by !== e.payer_id && (
+                    <span className="exp-by">segnata da {profileName(e.created_by)}</span>
+                  )}
                   {when && <span className="exp-time">{when}</span>}
-                  {e.payer_id === myId && (
+                  {e.created_by === myId && (
                     <button className="exp-del" onClick={() => handleDelete(e.id)} title="Elimina questa spesa" aria-label="Elimina">✕</button>
                   )}
                 </div>
