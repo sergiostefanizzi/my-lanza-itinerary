@@ -9,6 +9,8 @@ import {
   deleteExpense,
   subscribeExpenses,
   unsubscribeExpenses,
+  computeBalances,
+  computeSettlement,
 } from "../lib/expenses.js";
 
 // Tab "Spese": cassa comune del viaggio (stile Splitwise). Inserimento spese con
@@ -53,12 +55,17 @@ export default function ExpensesTab() {
   const [selected, setSelected] = useState(() => new Set()); // partecipanti
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState(null);
+  const [showSettle, setShowSettle] = useState(false);
 
   const profileName = useMemo(() => {
     const m = {};
     for (const p of profiles) m[p.id] = p.name;
     return (id) => m[id] || "—";
   }, [profiles]);
+
+  // Settle-up: saldi netti e trasferimenti minimi, ricalcolati a ogni cambio spese.
+  const balances = useMemo(() => computeBalances(expenses), [expenses]);
+  const settlement = useMemo(() => computeSettlement(balances), [balances]);
 
   // Carica i partecipanti tutti pre-selezionati ogni volta che cambia l'elenco profili.
   function preselectAll(list) {
@@ -281,6 +288,38 @@ export default function ExpensesTab() {
 
       .exp-state { text-align: center; padding: 40px 0; color: rgba(var(--text-rgb),.5); }
 
+      .exp-settle { margin-bottom: 24px; }
+      .exp-settle-btn {
+        width: 100%; padding: 12px; border-radius: 10px; cursor: pointer;
+        background: transparent; border: 1px solid rgba(var(--gold-rgb),.45);
+        color: var(--gold); font-family: 'DM Sans', sans-serif; font-size: 13px;
+        font-weight: 600; letter-spacing: 1px; transition: background .2s;
+      }
+      .exp-settle-btn:hover { background: rgba(var(--gold-rgb),.1); }
+      .exp-settle-btn.on { background: rgba(var(--gold-rgb),.12); }
+      .exp-settle-card {
+        margin-top: 12px; padding: 16px 18px; border-radius: 12px;
+        background: rgba(var(--gold-rgb),.06); border: 1px solid rgba(var(--gold-rgb),.18);
+      }
+      .exp-settle-ok {
+        text-align: center; font-family: 'Cormorant Garamond', serif; font-size: 19px; color: var(--gold);
+      }
+      .exp-settle-row {
+        display: flex; align-items: center; gap: 7px; padding: 7px 0; font-size: 14px;
+        border-bottom: 1px solid rgba(var(--surface-rgb),.06);
+      }
+      .exp-settle-row:last-of-type { border-bottom: none; }
+      .exp-settle-row b { font-weight: 600; color: var(--title); }
+      .exp-settle-row .sep { color: rgba(var(--text-rgb),.45); font-size: 12px; }
+      .exp-settle-amt { color: var(--gold); font-weight: 600; }
+      .exp-balances {
+        display: flex; flex-wrap: wrap; gap: 8px;
+        margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(var(--surface-rgb),.08);
+      }
+      .exp-bal { font-size: 11.5px; padding: 3px 9px; border-radius: 10px; }
+      .exp-bal.pos { background: rgba(124,186,108,.14); color: #7cba6c; }
+      .exp-bal.neg { background: rgba(224,82,82,.13); color: #e05252; }
+
       @media (max-width: 560px) {
         .exp-card { padding: 16px; }
         .exp-time { display: none; }
@@ -394,6 +433,48 @@ export default function ExpensesTab() {
           </button>
         </form>
       </div>
+
+      {/* ── Chi deve a chi? (settle-up) ── */}
+      {expenses.length > 0 && (
+        <div className="exp-settle">
+          <button
+            className={"exp-settle-btn" + (showSettle ? " on" : "")}
+            onClick={() => setShowSettle((s) => !s)}
+          >
+            {showSettle ? "Nascondi conti" : "Chi deve a chi?"}
+          </button>
+
+          {showSettle && (
+            <div className="exp-settle-card">
+              {settlement.length === 0 ? (
+                <div className="exp-settle-ok">Siete in pari — nessun debito da saldare 🎉</div>
+              ) : (
+                <>
+                  {settlement.map((t, i) => (
+                    <div className="exp-settle-row" key={i}>
+                      <b>{profileName(t.from)}</b>
+                      <span className="sep">deve</span>
+                      <span className="exp-settle-amt">€{t.amount.toFixed(2)}</span>
+                      <span className="sep">a</span>
+                      <b>{profileName(t.to)}</b>
+                    </div>
+                  ))}
+                  <div className="exp-balances">
+                    {Object.entries(balances)
+                      .filter(([, v]) => Math.abs(v) >= 0.005)
+                      .sort((a, b) => b[1] - a[1])
+                      .map(([id, v]) => (
+                        <span key={id} className={"exp-bal " + (v >= 0 ? "pos" : "neg")}>
+                          {profileName(id)} {v >= 0 ? "+" : "−"}€{Math.abs(v).toFixed(2)}
+                        </span>
+                      ))}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ── Feed a fumetti ── */}
       <div className="exp-feed-title">Spese del viaggio</div>
