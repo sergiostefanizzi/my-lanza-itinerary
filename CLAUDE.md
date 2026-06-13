@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Stato del progetto
 
-App React **personale** per consultare un itinerario di viaggio a Lanzarote (giugno 2026). Lingua dei contenuti: italiano. L'app è un single-page React senza routing. **Accesso riservato**: è protetta da autenticazione email/password (Supabase); il solo "backend" è l'auth (Supabase + una funzione serverless Vercel per il limite registrazioni). Vedi sezione "Autenticazione".
+App React **personale** per consultare un itinerario di viaggio a Lanzarote (giugno 2026). Lingua dei contenuti: italiano. L'app è un single-page React senza routing. **Accesso riservato**: è protetta da autenticazione email/password (Supabase). Il "backend" è Supabase (auth + una funzione serverless Vercel per il limite registrazioni) e una tabella `done_items` per le **spunte condivise tra utenti in tempo reale**. Vedi sezioni "Autenticazione" e "Spunta attività".
 
 Milestone di scaffolding completate: **M0–M4** (CLAUDE.md, scaffolding Vite, migrazione in `src/`, verifica end-to-end, README + istruzioni deploy Vercel). Piano archiviato: `C:\Users\sergi\.claude\plans\voglio-costuire-un-app-rosy-cloud.md`.
 
@@ -53,7 +53,7 @@ $$;
 
 **Dev locale**: `npm run dev` (Vite) **non** serve `/api`. Login e gate si provano con `npm run dev`; la **registrazione** (funzione serverless) richiede `vercel dev` o un preview deploy su Vercel.
 
-**Sicurezza**: la secret key sta **solo** nelle env della funzione serverless (revocabile/rigenerabile singolarmente se trapela, senza ruotare il JWT secret). Il client **non espone tabelle** (fa solo auth) → l'avviso Supabase "publishable safe in browser **se** RLS abilitato" non ci riguarda; unico oggetto DB è `count_users()`, chiamato solo lato server. Reset password "dimenticata" è **fuori scope** (richiede invio email).
+**Sicurezza**: la secret key sta **solo** nelle env della funzione serverless (revocabile/rigenerabile singolarmente se trapela, senza ruotare il JWT secret). Il client espone **una sola** tabella, `done_items` (spunte condivise, vedi "Spunta attività"), protetta da **RLS** (solo `authenticated`) → l'avviso Supabase "publishable safe in browser **se** RLS abilitato" è rispettato. La funzione `count_users()` è chiamata solo lato server con la secret key. Reset password "dimenticata" è **fuori scope** (richiede invio email).
 
 **Stato milestone**: **TUTTE COMPLETATE.** M1 (dipendenza `@supabase/supabase-js`, `src/lib/supabaseClient.js`, `.env.example`, doc); M2 (funzione `api/register.js` + limite `MAX_USERS`); M3 (`src/components/AuthGate.jsx` + gate/logout in `App.jsx`, README aggiornato). Restano azioni manuali dell'utente lato Supabase (provider Email ON, Confirm email OFF, signup pubblico OFF, funzione `count_users()`) e le env su Vercel.
 
@@ -162,7 +162,7 @@ Nella tab "Itinerario" ogni voce di `days[].items` è marcabile come **completat
 
 **Modello dati**: lo stato è un `Set` di chiavi `${giorno}-${indice}` (es. `"2-0"`), tenuto nello state React `done`. L'identità di un'attività dipende quindi dalla sua **posizione (indice) in `items`**: riordinare/inserire voci in `items` rimescola le spunte già salvate (vincolo accettato, dati hardcoded).
 
-**Persistenza**: `localStorage`, chiave `doneItems` (array serializzato del Set). È locale al singolo dispositivo/browser — **non** è condivisa tra utenti né tra device (scelta esplicita: niente backend/DB). `getInitialDone()` la rilegge al mount; un `useEffect` la riscrive a ogni cambio.
+**Persistenza (CONDIVISA tra utenti, via Supabase + Realtime)**: lo stato è salvato nella tabella `public.done_items` su Supabase (una riga per chiave barrata) ed è **condiviso da tutti gli utenti loggati**: quando uno barra/sbarra, la modifica si propaga a tutti **in tempo reale**. L'accesso passa dal modulo `src/lib/doneItems.js` (`fetchDoneKeys`/`addDone`/`removeDone`/`subscribeDoneItems`), con publishable key + **RLS** (solo `authenticated`; policy SELECT/INSERT/DELETE su tutto — lista condivisa tra utenti fidati). Flusso nel componente: al mount `fetchDoneKeys()` popola `done` (sovrascrivendo la cache); un `useEffect` apre la subscription Realtime (INSERT→add, DELETE→delete sul `Set`) con cleanup `unsubscribeDoneItems`; `toggleDone` fa un **update ottimistico** del `Set` poi scrive sul server, con **rollback** su errore. `localStorage` (chiave `doneItems`) resta **solo come cache** per il primo paint / lettura offline: `getInitialDone()` la rilegge al mount (prima del fetch) e un `useEffect` la riscrive a ogni cambio. Modello a chiavi position-based invariato. Coda offline persistente = fuori scope (spunte offline che non riescono a scrivere vengono annullate).
 
 **UI**: attività completata → `.item.done` (testo barrato via `background-size` animato; l'opacità `.45` si applica a `.item-main`, **non** all'intera `.item`, così il pannello dettagli espanso resta leggibile); la spunta `.item-check` si riempie con l'accent del giorno (passato via CSS var inline `--accent`). Quando tutte le voci **obbligatorie** di un giorno sono done → `.day-card.completed` (card sbiadita: `opacity`/`saturate` ridotti, attenuati su hover e da aperta) + `.day-done-check` (✓ nell'accent vicino al chevron, che sostituisce il `badge` se presente). **Niente contatori** per scelta esplicita.
 

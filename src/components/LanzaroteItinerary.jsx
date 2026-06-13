@@ -1,5 +1,6 @@
 import { useState, useLayoutEffect, useEffect, useRef } from "react";
 import DayMap from "./DayMap.jsx";
+import { fetchDoneKeys, addDone, removeDone, subscribeDoneItems, unsubscribeDoneItems } from "../lib/doneItems.js";
 
 // Base del viaggio (alloggio): punto di partenza/ritorno delle giornate.
 const BASE = { label: "Casa Vera · Puerto del Carmen", coords: [28.918, -13.666] };
@@ -301,8 +302,10 @@ function getInitialTheme() {
   return "dark";
 }
 
-// Stato "attività completate": persistito in localStorage (solo questo dispositivo).
-// Ogni attività è identificata da `${giorno}-${indice}`.
+// Stato "attività completate": ora CONDIVISO tra tutti gli utenti via Supabase
+// (tabella done_items, vedi src/lib/doneItems.js). localStorage resta solo come
+// cache per il primo paint / lettura offline. Ogni attività è identificata da
+// `${giorno}-${indice}`.
 const DONE_KEY = "doneItems";
 function getInitialDone() {
   try {
@@ -333,9 +336,35 @@ export default function LanzaroteItinerary() {
     try { localStorage.setItem("theme", theme); } catch (e) { /* no-op */ }
   }, [theme]);
 
+  // Cache locale: riscrive su localStorage a ogni cambio (primo paint / offline).
   useEffect(() => {
     try { localStorage.setItem(DONE_KEY, JSON.stringify([...done])); } catch (e) { /* no-op */ }
   }, [done]);
+
+  // Stato condiviso: al mount leggo le spunte dal server (sovrascrivendo la cache)
+  // e mi sottoscrivo alle modifiche in tempo reale (Realtime) degli altri utenti.
+  useEffect(() => {
+    let active = true;
+    fetchDoneKeys()
+      .then(keys => { if (active) setDone(new Set(keys)); })
+      .catch(err => console.error("Lettura spunte dal server fallita (uso la cache locale):", err));
+
+    const channel = subscribeDoneItems({
+      onInsert: key => setDone(prev => {
+        if (prev.has(key)) return prev;
+        const next = new Set(prev); next.add(key); return next;
+      }),
+      onDelete: key => setDone(prev => {
+        if (!prev.has(key)) return prev;
+        const next = new Set(prev); next.delete(key); return next;
+      }),
+    });
+
+    return () => {
+      active = false;
+      unsubscribeDoneItems(channel);
+    };
+  }, []);
 
   // Porta in alto il giorno appena aperto (dopo che l'animazione apri/chiudi si è assestata, ~400ms).
   useEffect(() => {
@@ -359,11 +388,24 @@ export default function LanzaroteItinerary() {
   }, [expandedItem]);
 
   function toggleDone(key) {
+    const wasDone = done.has(key);
+    // Update ottimistico: la UI cambia subito.
     setDone(prev => {
       const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
+      if (wasDone) next.delete(key);
       else next.add(key);
       return next;
+    });
+    // Scrittura sul server (condivisa); in caso d'errore, rollback.
+    const op = wasDone ? removeDone(key) : addDone(key);
+    op.catch(err => {
+      console.error("Salvataggio spunta fallito, ripristino:", err);
+      setDone(prev => {
+        const next = new Set(prev);
+        if (wasDone) next.add(key);
+        else next.delete(key);
+        return next;
+      });
     });
   }
 

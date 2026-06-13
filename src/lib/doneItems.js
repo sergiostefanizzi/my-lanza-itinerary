@@ -29,7 +29,7 @@ export async function removeDone(key) {
 
 // Sottoscrive le modifiche in tempo reale. `onInsert(key)` quando qualcuno barra,
 // `onDelete(key)` quando qualcuno sbarra. Ritorna il channel: passarlo a
-// `supabase.removeChannel(channel)` nel cleanup dell'effetto.
+// `unsubscribeDoneItems(channel)` nel cleanup dell'effetto.
 export function subscribeDoneItems({ onInsert, onDelete }) {
   const channel = supabase
     .channel("done_items")
@@ -45,4 +45,9 @@ export function subscribeDoneItems({ onInsert, onDelete }) {
     )
     .subscribe();
   return channel;
+}
+
+// Chiude la subscription Realtime (cleanup dell'effetto).
+export function unsubscribeDoneItems(channel) {
+  if (channel) supabase.removeChannel(channel);
 }
