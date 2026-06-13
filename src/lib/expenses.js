@@ -53,15 +53,20 @@ export async function fetchExpenses() {
 export async function addExpense({ name, amount, category, participantIds, payerName }) {
   const { data: auth } = await supabase.auth.getUser();
   const payerId = auth?.user?.id;
-  const { error } = await supabase.from("expenses").insert({
-    name,
-    amount,
-    category,
-    payer_id: payerId,
-    payer_name: payerName,
-    participant_ids: participantIds,
-  });
+  const { data, error } = await supabase
+    .from("expenses")
+    .insert({
+      name,
+      amount,
+      category,
+      payer_id: payerId,
+      payer_name: payerName,
+      participant_ids: participantIds,
+    })
+    .select()
+    .single();
   if (error) throw error;
+  return data; // riga inserita (per mostrare subito il fumetto)
 }
 
 // Elimina una spesa (RLS: solo la propria).
