@@ -67,6 +67,7 @@ $$;
 - **`src/index.css`** — reset minimo (`html, body { margin: 0 }`). Tutto il resto degli stili vive inline nel componente.
 - **`src/lib/supabaseClient.js`** — client Supabase per il browser (publishable key, sessione persistente/auto-refresh). Vedi sezione "Autenticazione".
 - **`src/lib/doneItems.js`** — accesso dati alle **spunte condivise** (tabella `done_items` su Supabase): `fetchDoneKeys()`, `addDone(key)`, `removeDone(key)`, `subscribeDoneItems({onInsert,onDelete})` (Realtime). Accesso via publishable key + RLS (solo `authenticated`). Vedi sezione "Spunta attività".
+- **`src/lib/expenses.js`** — accesso dati + logica della **cassa comune** (spese condivise stile Splitwise). Tabelle `profiles` (id+nome) ed `expenses` su Supabase. Profili: `fetchProfiles`/`getMyName`/`setMyName`. Spese: `fetchExpenses`/`addExpense`/`deleteExpense`/`subscribeExpenses`/`unsubscribeExpenses` (Realtime). Logica pura (no rete): `computeBalances(expenses)` → saldi netti, `computeSettlement(balances)` → trasferimenti minimi "chi deve a chi". RLS (solo `authenticated`). Vedi sezione "Spese condivise".
 - **`Lanzorote26.md`** — appunti grezzi del viaggio (voli, alloggio, noleggio auto, attrazioni, ristoranti, tour). **Fonte di verità** per le evolutive future dei contenuti. Non viene importato dall'app: serve come reference per quando si aggiorneranno i dati dell'itinerario.
 - **`README.md`** — descrizione progetto, comandi di sviluppo e istruzioni di deploy su Vercel.
 
@@ -85,7 +86,8 @@ $$;
 │   ├── index.css
 │   ├── lib/
 │   │   ├── supabaseClient.js # client Supabase (browser)
-│   │   └── doneItems.js      # accesso dati spunte condivise (tabella + realtime)
+│   │   ├── doneItems.js      # accesso dati spunte condivise (tabella + realtime)
+│   │   └── expenses.js       # cassa comune: dati spese/profili + logica settle-up
 │   └── components/
 │       ├── LanzaroteItinerary.jsx
 │       ├── AuthGate.jsx      # schermata login/registrazione (gate)
